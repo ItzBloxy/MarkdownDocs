@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import type { Editor } from '@tiptap/react'
 import { DocIdentity } from './DocIdentity'
 import { MenuDropdown, type MenuItem } from './MenuDropdown'
-import '../styles/toolbar.css'
+import { showToast } from './Toast'
+import { editorToMarkdown } from '../utils/markdownExport'
 
 interface FileSystemActions {
   openFile: () => void
@@ -97,9 +98,9 @@ export function TitleMenuBar({ editor, onOpenShortcuts, onLinkClick, onOpenFind,
   ]
 
   const languageItems: MenuItem[] = [
-    { label: spellcheckLanguage === 'en_US' ? '✓ English (US)' : '  English (US)', action: () => onSetLanguage?.('en_US') },
-    { label: spellcheckLanguage === 'da_DK' ? '✓ Dansk (DA)' : '  Dansk (DA)', action: () => onSetLanguage?.('da_DK') },
-    { label: spellcheckLanguage === 'none' ? '✓ None' : '  None', action: () => onSetLanguage?.('none') },
+    { label: 'English (US)', checked: spellcheckLanguage === 'en_US', action: () => onSetLanguage?.('en_US') },
+    { label: 'Dansk (DA)', checked: spellcheckLanguage === 'da_DK', action: () => onSetLanguage?.('da_DK') },
+    { label: 'No spellcheck', checked: spellcheckLanguage === 'none', action: () => onSetLanguage?.('none') },
   ]
 
   const helpItems: MenuItem[] = [
@@ -115,47 +116,51 @@ export function TitleMenuBar({ editor, onOpenShortcuts, onLinkClick, onOpenFind,
     { label: 'Help', items: helpItems },
   ]
 
+  const copyMarkdown = async () => {
+    if (!editor) return
+    try {
+      await navigator.clipboard.writeText(editorToMarkdown(editor))
+      showToast('Markdown copied to clipboard')
+    } catch {
+      showToast("Couldn't reach the clipboard. Use File › Download as .md instead.")
+    }
+  }
+
   return (
-    <div
-      ref={barRef}
-      style={{
-        background: 'var(--bg-surface)',
-        padding: '6px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 16,
-        borderBottom: '1px solid var(--border-primary)',
-        fontSize: 13,
-        flexShrink: 0,
-      }}
-    >
+    <div ref={barRef} className="title-bar">
       <DocIdentity />
-      <div style={{ display: 'flex', gap: 4 }}>
+      <nav className="menubar" aria-label="Application menu">
         {menus.map(menu => (
-          <div key={menu.label} style={{ position: 'relative' }}>
-            <span
-              className="menu-item"
+          <div key={menu.label} className="menubar-slot">
+            <button
+              type="button"
+              className={`menubar-trigger ${openMenu === menu.label ? 'is-open' : ''}`}
+              aria-haspopup="menu"
+              aria-expanded={openMenu === menu.label}
               onClick={() => toggle(menu.label)}
               onMouseEnter={() => {
                 if (openMenu && openMenu !== menu.label) setOpenMenu(menu.label)
               }}
             >
               {menu.label}
-            </span>
+            </button>
             {openMenu === menu.label && (
               <MenuDropdown items={menu.items} onClose={close} />
             )}
           </div>
         ))}
+      </nav>
+      <div className="title-bar-actions">
+        <button
+          type="button"
+          className="menubar-trigger"
+          aria-label="Copy document as markdown"
+          onClick={copyMarkdown}
+          disabled={!editor}
+        >
+          Share
+        </button>
       </div>
-      <div style={{ flex: 1 }} />
-      <button
-        className="menu-item"
-        style={{ border: 'none', background: 'none', fontFamily: 'var(--font-ui)' }}
-        aria-label="Copy document as markdown"
-      >
-        Share
-      </button>
     </div>
   )
 }

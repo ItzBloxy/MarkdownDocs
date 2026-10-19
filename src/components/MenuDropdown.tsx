@@ -5,6 +5,8 @@ export interface MenuItem {
   shortcut?: string
   disabled?: boolean
   separator?: boolean
+  /** Renders a choice marker; true when this option is the current one. */
+  checked?: boolean
   action?: () => void
 }
 
@@ -20,8 +22,10 @@ export function MenuDropdown({ items, onClose }: MenuDropdownProps) {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
+    // The parent holds the trigger too: clicking it should toggle, not close-then-reopen.
     const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      const scope = ref.current?.parentElement ?? ref.current
+      if (scope && !scope.contains(e.target as Node)) {
         onClose()
       }
     }
@@ -34,26 +38,32 @@ export function MenuDropdown({ items, onClose }: MenuDropdownProps) {
   }, [onClose])
 
   return (
-    <div ref={ref} className="menu-dropdown">
+    <div ref={ref} className="menu" role="menu">
       {items.map((item, i) => {
         if (item.separator) {
-          return <div key={`sep-${i}`} className="menu-dropdown-sep" />
+          return <div key={`sep-${i}`} className="menu-sep" role="separator" />
         }
+        const isChoice = item.checked !== undefined
         return (
-          <div
+          <button
             key={item.label}
-            className={`menu-dropdown-item ${item.disabled ? 'disabled' : ''}`}
+            type="button"
+            role={isChoice ? 'menuitemradio' : 'menuitem'}
+            aria-checked={isChoice ? item.checked : undefined}
+            aria-disabled={item.disabled || undefined}
+            className={`menu-item ${item.disabled ? 'is-disabled' : ''}`}
             onClick={() => {
               if (item.disabled) return
               item.action?.()
               onClose()
             }}
           >
-            <span>{item.label}</span>
+            {isChoice && <span className={`menu-check ${item.checked ? 'is-on' : ''}`} aria-hidden="true" />}
+            <span className="menu-item-label">{item.label}</span>
             {item.shortcut && (
-              <span className="menu-dropdown-shortcut">{item.shortcut}</span>
+              <span className="menu-item-shortcut">{item.shortcut}</span>
             )}
-          </div>
+          </button>
         )
       })}
     </div>

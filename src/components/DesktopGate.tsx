@@ -12,19 +12,12 @@ export function DesktopGate({ children }: { children: React.ReactNode }) {
 
   if (tooSmall) {
     return (
-      <div style={{
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'var(--bg-canvas)',
-        color: 'var(--text-secondary)',
-        fontFamily: 'var(--font-ui)',
-        fontSize: 16,
-        textAlign: 'center',
-        padding: 32,
-      }}>
-        MarkdownDocs is designed for desktop browsers.
+      <div className="desktop-gate">
+        <h1>MarkdownDocs</h1>
+        <p>
+          MarkdownDocs needs a window at least 1024px wide. Widen this window,
+          or open it on a desktop browser.
+        </p>
       </div>
     )
   }

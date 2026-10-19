@@ -5,33 +5,19 @@ interface ConflictBarProps {
 
 export function ConflictBar({ onReload, onKeep }: ConflictBarProps) {
   return (
-    <div style={{
-      background: 'rgba(160, 122, 255, 0.12)',
-      border: '1px solid var(--accent-dim)',
-      borderRadius: 6,
-      padding: '8px 16px',
-      margin: '0 auto 12px',
-      maxWidth: 816,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: 12,
-      fontFamily: 'var(--font-ui)',
-      fontSize: 13,
-      color: 'var(--text-primary)',
-    }}>
-      <span>This file was changed outside MarkdownDocs.</span>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={onReload} style={{
-          padding: '4px 12px', borderRadius: 4, border: 'none',
-          background: 'var(--accent)', color: '#fff', fontSize: 12,
-          cursor: 'pointer', fontFamily: 'var(--font-ui)',
-        }}>Reload</button>
-        <button onClick={onKeep} style={{
-          padding: '4px 12px', borderRadius: 4, border: '1px solid var(--border-primary)',
-          background: 'none', color: 'var(--text-secondary)', fontSize: 12,
-          cursor: 'pointer', fontFamily: 'var(--font-ui)',
-        }}>Keep mine</button>
+    <div className="conflict-bar" role="alert">
+      <span className="conflict-hatch" aria-hidden="true" />
+      <div className="conflict-text">
+        <span className="meta">Changed on disk</span>
+        <span className="conflict-message">This file was changed outside MarkdownDocs.</span>
+      </div>
+      <div className="conflict-actions">
+        <button type="button" className="btn btn-secondary" onClick={onReload}>
+          Reload from disk
+        </button>
+        <button type="button" className="btn btn-ghost" onClick={onKeep}>
+          <span className="btn-label">Keep my changes</span>
+        </button>
       </div>
     </div>
   )

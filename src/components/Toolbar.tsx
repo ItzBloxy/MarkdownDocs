@@ -1,14 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, type ReactNode } from 'react'
 import { type Editor } from '@tiptap/react'
 import {
   Undo2, Redo2, Bold, Italic, Underline, Strikethrough,
   Code, Braces, Link, List, ListOrdered, Quote, Minus,
   Table2, EyeOff, ChevronDown,
 } from 'lucide-react'
-import '../styles/toolbar.css'
 
 const headingOptions = [
-  { key: 'p', label: 'Normal Text' },
+  { key: 'p', label: 'Normal text' },
   { key: 'h1', label: 'Heading 1' },
   { key: 'h2', label: 'Heading 2' },
   { key: 'h3', label: 'Heading 3' },
@@ -20,6 +19,33 @@ function getActiveHeading(editor: Editor | null): string {
   if (editor.isActive('heading', { level: 2 })) return 'h2'
   if (editor.isActive('heading', { level: 3 })) return 'h3'
   return 'p'
+}
+
+const ICON = 18
+
+interface ToolButtonProps {
+  label: string
+  shortcut?: string
+  active?: boolean
+  disabled?: boolean
+  onClick: () => void
+  children: ReactNode
+}
+
+function ToolButton({ label, shortcut, active, disabled, onClick, children }: ToolButtonProps) {
+  return (
+    <button
+      type="button"
+      className={`tb-btn has-tip ${active ? 'is-active' : ''}`}
+      aria-label={label}
+      aria-pressed={active === undefined ? undefined : active}
+      data-tip={shortcut ? `${label}  ${shortcut}` : label}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
 }
 
 interface ToolbarProps {
@@ -47,8 +73,15 @@ export function Toolbar({ editor, onLinkClick }: ToolbarProps) {
         setHeadingOpen(false)
       }
     }
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setHeadingOpen(false)
+    }
     document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
+    document.addEventListener('keydown', handleKey)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+      document.removeEventListener('keydown', handleKey)
+    }
   }, [headingOpen])
 
   const setHeading = (key: string) => {
@@ -63,170 +96,93 @@ export function Toolbar({ editor, onLinkClick }: ToolbarProps) {
   }
 
   return (
-    <div
-      style={{
-        background: 'var(--bg-surface-alt)',
-        padding: '8px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 4,
-        borderBottom: '1px solid var(--border-primary)',
-        flexShrink: 0,
-      }}
-    >
-      {/* Undo / Redo */}
-      <button
-        className="tb-btn"
-        aria-label="Undo"
-        disabled={!editor?.can().undo()}
-        onClick={() => editor?.chain().focus().undo().run()}
-      >
-        <Undo2 size={16} />
-      </button>
-      <button
-        className="tb-btn"
-        aria-label="Redo"
-        disabled={!editor?.can().redo()}
-        onClick={() => editor?.chain().focus().redo().run()}
-      >
-        <Redo2 size={16} />
-      </button>
+    <div className="toolbar-bar" role="toolbar" aria-label="Formatting">
+      <ToolButton label="Undo" shortcut="Ctrl+Z" disabled={!editor?.can().undo()} onClick={() => editor?.chain().focus().undo().run()}>
+        <Undo2 size={ICON} />
+      </ToolButton>
+      <ToolButton label="Redo" shortcut="Ctrl+Shift+Z" disabled={!editor?.can().redo()} onClick={() => editor?.chain().focus().redo().run()}>
+        <Redo2 size={ICON} />
+      </ToolButton>
       <div className="tb-sep" />
 
-      {/* Heading dropdown */}
-      <div ref={dropdownRef} style={{ position: 'relative' }}>
-        <div
-          className="heading-dropdown"
+      <div ref={dropdownRef} className="style-picker">
+        <button
+          type="button"
+          className={`style-select ${headingOpen ? 'is-open' : ''}`}
           aria-label="Text style"
+          aria-haspopup="menu"
+          aria-expanded={headingOpen}
           onClick={() => setHeadingOpen(!headingOpen)}
         >
-          <span>{headingOptions.find(h => h.key === activeHeading)?.label ?? 'Normal Text'}</span>
-          <ChevronDown size={12} style={{ marginLeft: 8, opacity: 0.6 }} />
-        </div>
+          <span>{headingOptions.find(h => h.key === activeHeading)?.label ?? 'Normal text'}</span>
+          <ChevronDown size={16} />
+        </button>
         {headingOpen && (
-          <div className="heading-dropdown-menu">
+          <div className="menu" role="menu">
             {headingOptions.map(opt => (
-              <div
+              <button
                 key={opt.key}
-                className={`heading-dropdown-item ${opt.key === activeHeading ? 'active' : ''}`}
+                type="button"
+                role="menuitemradio"
+                aria-checked={opt.key === activeHeading}
+                className="menu-item"
                 onClick={() => setHeading(opt.key)}
               >
-                {opt.label}
-              </div>
+                <span className={`menu-check ${opt.key === activeHeading ? 'is-on' : ''}`} aria-hidden="true" />
+                <span className={`menu-item-label style-option-${opt.key}`}>{opt.label}</span>
+              </button>
             ))}
           </div>
         )}
       </div>
       <div className="tb-sep" />
 
-      {/* Inline formatting */}
-      <button
-        className={`tb-btn ${isActive('bold') ? 'active' : ''}`}
-        aria-label="Bold"
-        onClick={() => run(() => editor?.chain().focus().toggleBold().run())}
-      >
-        <Bold size={16} />
-      </button>
-      <button
-        className={`tb-btn ${isActive('italic') ? 'active' : ''}`}
-        aria-label="Italic"
-        onClick={() => run(() => editor?.chain().focus().toggleItalic().run())}
-      >
-        <Italic size={16} />
-      </button>
-      <button
-        className={`tb-btn ${isActive('underline') ? 'active' : ''}`}
-        aria-label="Underline"
-        onClick={() => run(() => editor?.chain().focus().toggleMark('underline').run())}
-      >
-        <Underline size={16} />
-      </button>
-      <button
-        className={`tb-btn ${isActive('strike') ? 'active' : ''}`}
-        aria-label="Strikethrough"
-        onClick={() => run(() => editor?.chain().focus().toggleStrike().run())}
-      >
-        <Strikethrough size={16} />
-      </button>
+      <ToolButton label="Bold" shortcut="Ctrl+B" active={isActive('bold')} onClick={() => run(() => editor?.chain().focus().toggleBold().run())}>
+        <Bold size={ICON} />
+      </ToolButton>
+      <ToolButton label="Italic" shortcut="Ctrl+I" active={isActive('italic')} onClick={() => run(() => editor?.chain().focus().toggleItalic().run())}>
+        <Italic size={ICON} />
+      </ToolButton>
+      <ToolButton label="Underline" shortcut="Ctrl+U" active={isActive('underline')} onClick={() => run(() => editor?.chain().focus().toggleMark('underline').run())}>
+        <Underline size={ICON} />
+      </ToolButton>
+      <ToolButton label="Strikethrough" shortcut="Ctrl+Shift+X" active={isActive('strike')} onClick={() => run(() => editor?.chain().focus().toggleStrike().run())}>
+        <Strikethrough size={ICON} />
+      </ToolButton>
       <div className="tb-sep" />
 
-      {/* Code, Code Block, Link */}
-      <button
-        className={`tb-btn ${isActive('code') ? 'active' : ''}`}
-        aria-label="Inline code"
-        onClick={() => run(() => editor?.chain().focus().toggleCode().run())}
-      >
-        <Code size={16} />
-      </button>
-      <button
-        className={`tb-btn ${isActive('codeBlock') ? 'active' : ''}`}
-        aria-label="Code block"
-        onClick={() => run(() => editor?.chain().focus().toggleCodeBlock().run())}
-      >
-        <Braces size={16} />
-      </button>
-      <button
-        className={`tb-btn ${isActive('link') ? 'active' : ''}`}
-        aria-label="Link"
-        onClick={onLinkClick}
-      >
-        <Link size={16} />
-      </button>
+      <ToolButton label="Inline code" shortcut="Ctrl+E" active={isActive('code')} onClick={() => run(() => editor?.chain().focus().toggleCode().run())}>
+        <Code size={ICON} />
+      </ToolButton>
+      <ToolButton label="Code block" active={isActive('codeBlock')} onClick={() => run(() => editor?.chain().focus().toggleCodeBlock().run())}>
+        <Braces size={ICON} />
+      </ToolButton>
+      <ToolButton label="Link" shortcut="Ctrl+K" active={isActive('link')} onClick={() => onLinkClick?.()}>
+        <Link size={ICON} />
+      </ToolButton>
       <div className="tb-sep" />
 
-      {/* Lists, Quote, HR */}
-      <button
-        className={`tb-btn ${isActive('bulletList') ? 'active' : ''}`}
-        aria-label="Bullet list"
-        onClick={() => run(() => editor?.chain().focus().toggleBulletList().run())}
-      >
-        <List size={16} />
-      </button>
-      <button
-        className={`tb-btn ${isActive('orderedList') ? 'active' : ''}`}
-        aria-label="Numbered list"
-        onClick={() => run(() => editor?.chain().focus().toggleOrderedList().run())}
-      >
-        <ListOrdered size={16} />
-      </button>
-      <button
-        className={`tb-btn ${isActive('blockquote') ? 'active' : ''}`}
-        aria-label="Blockquote"
-        onClick={() => run(() => editor?.chain().focus().toggleBlockquote().run())}
-      >
-        <Quote size={16} />
-      </button>
-      <button
-        className="tb-btn"
-        aria-label="Horizontal rule"
-        onClick={() => run(() => editor?.chain().focus().setHorizontalRule().run())}
-      >
-        <Minus size={16} />
-      </button>
+      <ToolButton label="Bullet list" shortcut="Ctrl+Shift+8" active={isActive('bulletList')} onClick={() => run(() => editor?.chain().focus().toggleBulletList().run())}>
+        <List size={ICON} />
+      </ToolButton>
+      <ToolButton label="Numbered list" shortcut="Ctrl+Shift+7" active={isActive('orderedList')} onClick={() => run(() => editor?.chain().focus().toggleOrderedList().run())}>
+        <ListOrdered size={ICON} />
+      </ToolButton>
+      <ToolButton label="Blockquote" shortcut="Ctrl+Shift+9" active={isActive('blockquote')} onClick={() => run(() => editor?.chain().focus().toggleBlockquote().run())}>
+        <Quote size={ICON} />
+      </ToolButton>
+      <ToolButton label="Horizontal rule" onClick={() => run(() => editor?.chain().focus().setHorizontalRule().run())}>
+        <Minus size={ICON} />
+      </ToolButton>
       <div className="tb-sep" />
 
-      {/* Table, Spoiler */}
-      <button
-        className="tb-btn"
-        aria-label="Table"
-        onClick={() => editor?.chain().focus().insertTable({ rows: 2, cols: 3, withHeaderRow: true }).run()}
-      >
-        <Table2 size={16} />
-      </button>
-      <button
-        className={`tb-btn ${isActive('spoiler') ? 'active' : ''}`}
-        aria-label="Spoiler"
-        onClick={() => run(() => editor?.chain().focus().toggleMark('spoiler').run())}
-      >
-        <EyeOff size={16} />
-      </button>
+      <ToolButton label="Table" onClick={() => editor?.chain().focus().insertTable({ rows: 2, cols: 3, withHeaderRow: true }).run()}>
+        <Table2 size={ICON} />
+      </ToolButton>
+      <ToolButton label="Spoiler" active={isActive('spoiler')} onClick={() => run(() => editor?.chain().focus().toggleMark('spoiler').run())}>
+        <EyeOff size={ICON} />
+      </ToolButton>
 
-      <div style={{ flex: 1 }} />
-
-      {/* Preview */}
-      <button className="preview-btn" aria-label="Toggle preview" disabled>
-        Preview
-      </button>
     </div>
   )
 }

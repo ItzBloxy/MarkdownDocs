@@ -29,61 +29,34 @@ export function DocIdentity() {
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginRight: 8 }}>
+    <div className="doc-identity">
       {editing ? (
         <input
           ref={inputRef}
+          className="field doc-name-input"
+          aria-label="Document name"
           defaultValue={docName}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          style={{
-            background: 'var(--bg-input)',
-            border: '1px solid var(--border-light)',
-            borderRadius: 4,
-            padding: '2px 8px',
-            color: 'var(--text-primary)',
-            fontFamily: 'var(--font-ui)',
-            fontSize: 13,
-            fontWeight: 500,
-            outline: 'none',
-            minWidth: 120,
-          }}
         />
       ) : (
-        <span
+        <button
+          type="button"
+          className="doc-name"
+          title="Rename document"
           onClick={() => setEditing(true)}
-          style={{
-            color: 'var(--text-primary)',
-            fontWeight: 500,
-            fontSize: 13,
-            cursor: 'text',
-          }}
         >
           {docName}
-        </span>
+        </button>
       )}
       <button
+        type="button"
+        className={`icon-btn icon-btn-bare fav-btn ${isFavorited ? 'is-on' : ''}`}
         onClick={toggleFavorite}
         aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: 2,
-          display: 'flex',
-          transition: 'all 0.15s ease',
-          color: isFavorited ? 'var(--accent)' : 'var(--text-muted)',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.transform = 'scale(1.15)'
-          e.currentTarget.style.color = 'var(--accent)'
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.transform = 'scale(1)'
-          e.currentTarget.style.color = isFavorited ? 'var(--accent)' : 'var(--text-muted)'
-        }}
+        aria-pressed={isFavorited}
       >
-        <Star size={15} fill={isFavorited ? 'var(--accent)' : 'none'} />
+        <Star size={16} strokeWidth={2} fill={isFavorited ? 'currentColor' : 'none'} />
       </button>
     </div>
   )
