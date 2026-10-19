@@ -20,6 +20,8 @@ import { useEditorStats } from './hooks/useEditorStats'
 import { useFileSystem } from './hooks/useFileSystem'
 import { useContextMenu } from './hooks/useContextMenu'
 import { useSpellcheck } from './hooks/useSpellcheck'
+import './styles/chrome.css'
+import './styles/overlays.css'
 import './styles/editor.css'
 import './styles/table.css'
 import './styles/find-replace.css'
@@ -175,7 +177,7 @@ function EditorApp() {
   const handleOpenFind = () => setShowFind(true)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div className="app-shell">
       <TitleMenuBar
         editor={editor}
         onOpenShortcuts={() => setShowShortcuts(true)}
@@ -198,11 +200,6 @@ function EditorApp() {
         )}
         <EditorPage>
           <EditorContent editor={editor} />
-          {showLinkPopover && editor && (
-            <div style={{ position: 'relative' }}>
-              <LinkPopover editor={editor} onClose={() => setShowLinkPopover(false)} />
-            </div>
-          )}
         </EditorPage>
       </EditorCanvas>
       <StatusBar
@@ -213,6 +210,9 @@ function EditorApp() {
         onOpenShortcuts={() => setShowShortcuts(true)}
         fileState={fs.fileState}
       />
+      {showLinkPopover && editor && (
+        <LinkPopover editor={editor} onClose={() => setShowLinkPopover(false)} />
+      )}
       {showShortcuts && (
         <KeyboardShortcutsModal onClose={() => setShowShortcuts(false)} />
       )}
@@ -225,6 +225,7 @@ function EditorApp() {
           editor={editor}
           spellcheck={spellcheck}
           onClose={closeCtx}
+          onRequestLink={handleLinkClick}
         />
       )}
       {quickCorrect && (

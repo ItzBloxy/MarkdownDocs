@@ -19,6 +19,7 @@ interface ContextMenuProps {
   targetEl: HTMLElement | null
   editor: Editor
   onClose: () => void
+  onRequestLink: () => void
   spellcheck?: ReturnType<typeof useSpellcheck>
 }
 
@@ -51,6 +52,16 @@ const LANGUAGES = [
   { label: 'Plain Text', value: '' },
 ]
 
+// Keep a sub-menu on screen: open leftwards when it would overflow the right
+// edge, and shift it up when it would run past the bottom.
+function fitSubmenu(el: HTMLDivElement | null) {
+  if (!el) return
+  const rect = el.getBoundingClientRect()
+  if (rect.right > window.innerWidth - 8) el.classList.add('flip-left')
+  const overflowY = rect.bottom - (window.innerHeight - 8)
+  if (overflowY > 0) el.style.top = `${-overflowY}px`
+}
+
 function TurnIntoSubMenu({ editor, onClose }: { editor: Editor; onClose: () => void }) {
   const items = [
     { icon: <Pilcrow size={ICON_SIZE} />, label: 'Text', action: () => editor.chain().focus().setParagraph().run() },
@@ -64,11 +75,11 @@ function TurnIntoSubMenu({ editor, onClose }: { editor: Editor; onClose: () => v
   ]
 
   return (
-    <div className="ctx-submenu">
+    <div ref={fitSubmenu} className="menu ctx-submenu">
       {items.map(item => (
-        <button key={item.label} className="ctx-item" onClick={() => { item.action(); onClose() }}>
-          <span className="ctx-icon">{item.icon}</span>
-          <span className="ctx-label">{item.label}</span>
+        <button key={item.label} type="button" className="menu-item" onClick={() => { item.action(); onClose() }}>
+          <span className="menu-item-icon">{item.icon}</span>
+          <span className="menu-item-label">{item.label}</span>
         </button>
       ))}
     </div>
@@ -86,28 +97,28 @@ function LanguageSubMenu({ editor, onClose }: { editor: Editor; onClose: () => v
   }
 
   return (
-    <div className="ctx-submenu">
+    <div ref={fitSubmenu} className="menu ctx-submenu">
       <input
-        className="ctx-lang-input"
-        placeholder="Type a language..."
+        className="field ctx-lang-input"
+        placeholder="Filter or type a language"
         value={filter}
         onChange={e => setFilter(e.target.value)}
         onKeyDown={e => { if (e.key === 'Enter') { setLang(filter.trim()); } }}
         autoFocus
       />
       {filtered.map(lang => (
-        <button key={lang.label} className={`ctx-item ${currentLang === lang.value ? 'active' : ''}`} onClick={() => setLang(lang.value)}>
-          <span className="ctx-icon">
+        <button key={lang.label} className={`menu-item ${currentLang === lang.value ? 'is-active' : ''}`} onClick={() => setLang(lang.value)}>
+          <span className="menu-item-icon">
             {currentLang === lang.value ? <Check size={ICON_SIZE} /> : <Hash size={ICON_SIZE} />}
           </span>
-          <span className="ctx-label">{lang.label}</span>
+          <span className="menu-item-label">{lang.label}</span>
         </button>
       ))}
     </div>
   )
 }
 
-export function ContextMenu({ x, y, context, targetEl, editor, onClose, spellcheck }: ContextMenuProps) {
+export function ContextMenu({ x, y, context, targetEl, editor, onClose, onRequestLink, spellcheck }: ContextMenuProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [openSub, setOpenSub] = useState<string | null>(null)
   const subTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -207,7 +218,7 @@ export function ContextMenu({ x, y, context, targetEl, editor, onClose, spellche
     { icon: isActive('code') ? <Check size={ICON_SIZE} /> : <Code size={ICON_SIZE} />, label: 'Inline Code', shortcut: 'Ctrl+E', action: () => editor.chain().focus().toggleCode().run(), active: isActive('code') },
     { icon: <Sparkles size={ICON_SIZE} />, label: 'Spoiler', action: () => editor.chain().focus().toggleMark('spoiler').run() },
     { divider: true, label: '' },
-    { icon: <Link2 size={ICON_SIZE} />, label: 'Create Link', shortcut: 'Ctrl+K', action: () => { const url = prompt('URL:'); if (url) editor.chain().focus().setLink({ href: url }).run() } },
+    { icon: <Link2 size={ICON_SIZE} />, label: 'Create Link', shortcut: 'Ctrl+K', action: onRequestLink },
     { divider: true, label: '' },
     { icon: <Search size={ICON_SIZE} />, label: 'Look Up Selection', action: () => { const t = window.getSelection()?.toString() ?? ''; if (t) window.open(`https://www.google.com/search?q=${encodeURIComponent(t)}`, '_blank') } },
   ]
@@ -233,7 +244,12 @@ export function ContextMenu({ x, y, context, targetEl, editor, onClose, spellche
       items.push(
         { icon: <ExternalLink size={ICON_SIZE} />, label: 'Open Link', action: () => window.open(href, '_blank') },
         { icon: <Copy size={ICON_SIZE} />, label: 'Copy Link URL', action: () => copyToClipboard(href) },
-        { icon: <Link2 size={ICON_SIZE} />, label: 'Edit Link', action: () => { const url = prompt('URL:', href); if (url) editor.chain().focus().setLink({ href: url }).run() } },
+        { icon: <Link2 size={ICON_SIZE} />, label: 'Edit Link', action: () => {
+          // Put the caret inside the clicked link so the popover edits the whole link
+          const pos = editor.view.posAtCoords({ left: x, top: y })
+          if (pos) editor.chain().focus().setTextSelection(pos.pos).extendMarkRange('link').run()
+          onRequestLink()
+        } },
         { icon: <Unlink size={ICON_SIZE} />, label: 'Remove Link', action: () => editor.chain().focus().unsetLink().run() },
         { divider: true, label: '' },
         ...blockItems,
@@ -315,9 +331,9 @@ export function ContextMenu({ x, y, context, targetEl, editor, onClose, spellche
   }
 
   return createPortal(
-    <div ref={ref} className="context-menu" style={{ left: x, top: y }}>
+    <div ref={ref} className="menu context-menu" role="menu" style={{ left: x, top: y }}>
       {items.map((item, i) => {
-        if (item.divider) return <div key={`div-${i}`} className="ctx-divider" />
+        if (item.divider) return <div key={`div-${i}`} className="menu-sep" role="separator" />
 
         if (item.sub) {
           return (
@@ -327,10 +343,10 @@ export function ContextMenu({ x, y, context, targetEl, editor, onClose, spellche
               onMouseEnter={() => handleSubEnter(item.sub!)}
               onMouseLeave={handleSubLeave}
             >
-              <button className="ctx-item">
-                <span className="ctx-icon">{item.icon}</span>
-                <span className="ctx-label">{item.label}</span>
-                <span className="ctx-chevron"><ChevronRight size={12} /></span>
+              <button type="button" className={`menu-item ${openSub === item.sub ? 'is-highlighted' : ''}`} aria-haspopup="menu" aria-expanded={openSub === item.sub}>
+                <span className="menu-item-icon">{item.icon}</span>
+                <span className="menu-item-label">{item.label}</span>
+                <span className="menu-item-chevron"><ChevronRight size={12} /></span>
               </button>
               {openSub === item.sub && (
                 item.sub === 'turnInto'
@@ -344,15 +360,16 @@ export function ContextMenu({ x, y, context, targetEl, editor, onClose, spellche
         return (
           <button
             key={item.label + i}
-            className={`ctx-item ${item.disabled ? 'disabled' : ''} ${item.active ? 'active' : ''} ${item.className ?? ''}`}
+            type="button"
+            className={`menu-item ${item.disabled ? 'is-disabled' : ''} ${item.active ? 'is-active' : ''} ${item.className ?? ''}`}
             onClick={() => {
               if (item.disabled) return
               if (item.action) act(item.action)
             }}
           >
-            <span className="ctx-icon">{item.icon}</span>
-            <span className="ctx-label">{item.label}</span>
-            {item.shortcut && <span className="ctx-shortcut">{item.shortcut}</span>}
+            <span className="menu-item-icon">{item.icon}</span>
+            <span className="menu-item-label">{item.label}</span>
+            {item.shortcut && <span className="menu-item-shortcut">{item.shortcut}</span>}
           </button>
         )
       })}
