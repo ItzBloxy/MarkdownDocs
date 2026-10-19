@@ -1,31 +1,39 @@
-:root {
-  --bg-canvas: #0c0712;
-  --bg-surface: #130e1e;
-  --bg-surface-alt: #161024;
-  --bg-page: #ffffff;
-  --bg-input: #140f22;
-  --bg-hover: #261c3e;
-  --bg-active: #33245a;
-  --border-primary: #2a2044;
-  --border-light: #362a54;
-  --text-primary: #e6dff2;
-  --text-secondary: #a99cc6;
-  --text-muted: #6e5f8a;
-  --text-page: #000000;
-  --accent: #a07aff;
-  --accent-hover: #b999ff;
-  --accent-dim: #7b52e0;
-  --accent-bg: rgba(160, 122, 255, 0.10);
-  --accent-bg-strong: rgba(160, 122, 255, 0.15);
-  --selection: rgba(160, 122, 255, 0.30);
-  --code-bg: #faf8fd;
-  --code-bg-hover: #f3eef8;
-  --success: #6bffa8;
-  --danger: #ff6b8a;
+/* ==========================================================================
+   Raster — MarkdownDocs design system
+   Source: docs/style-reference (UI Kit 01, "Swiss editorial — dark").
+   Radius 0 everywhere. Hover inverts fill and ink; press holds the invert
+   and rings it in Royal Purple. Controls carry no shadows — only dialogs do.
+   1px borders for structure, 2px for anything you can press.
+   ========================================================================== */
 
-  --font-ui: 'Figtree', system-ui, sans-serif;
-  --font-body: 'Source Serif 4', Georgia, serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+:root {
+  /* Palette */
+  --ground: #0B0B0B;        /* app background */
+  --surface: #141414;       /* the page, bars */
+  --raised: #1A1A1A;        /* floating surfaces: menus, popovers, dialogs */
+  --rule: #2A2A2A;          /* structural hairlines */
+  --rule-soft: #1F1F1F;     /* row dividers */
+  --rule-strong: #3A3A3A;   /* borders of pressable things at rest */
+  --muted: #9C9C9C;         /* secondary text, meta */
+  --faint: #5C5C5C;         /* disabled text, link underlines, placeholders */
+  --ink-soft: #D6D6D6;      /* tag text, quotes */
+  --ink: #F2F2F2;           /* primary text */
+  --pressed: #E4E4E4;       /* held invert */
+  --royal: #6A0DAD;         /* fills, pressed rings — one signal per view */
+  --royal-300: #B968F3;     /* purple as a line on black */
+  --on-royal: #FFFFFF;
+  --disabled-fill: #1A1A1A;
+  --disabled-rule: #262626;
+
+  /* Type */
+  --font-ui: 'Schibsted Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  /* Floating surfaces lift on fill + a hard offset shadow, never an outline */
+  --shadow-float: 8px 8px 0 0 #000000;
+
+  /* Motion: state changes snap, they don't glide */
+  --snap: 80ms linear;
 }
 
 *,
@@ -43,36 +51,421 @@ html, body, #root {
 
 body {
   font-family: var(--font-ui);
-  background: var(--bg-canvas);
-  color: var(--text-primary);
+  background: var(--ground);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-::selection {
-  background: var(--selection);
+button,
+input {
+  font: inherit;
   color: inherit;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-/* Custom scrollbar */
+::selection {
+  background: var(--royal);
+  color: var(--on-royal);
+}
+
+:focus-visible {
+  outline: 2px solid var(--royal-300);
+  outline-offset: 2px;
+}
+
+/* Lucide ships round caps; Raster draws with square ones. */
+svg.lucide {
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+/* Scrollbars — square, quiet */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
   background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-primary);
-  border-radius: 4px;
+  background: var(--rule);
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-light);
+  background: var(--rule-strong);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--faint);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border-primary) transparent;
+  scrollbar-color: var(--rule) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Primitives
+   ========================================================================== */
+
+/* Meta label — JetBrains Mono, tracked caps. Labels and metadata only. */
+.meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Buttons. Sizes follow the kit's 36 / 48 scale; chrome uses 36. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border: 2px solid transparent;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--snap), border-color var(--snap), color var(--snap);
+}
+
+.btn:focus-visible {
+  outline-offset: 4px;
+}
+
+.btn-lg {
+  height: 44px;
+  padding: 0 18px;
+  font-size: 15px;
+}
+
+/* Primary — purple fill, one per view */
+.btn-primary {
+  background: var(--royal);
+  border-color: var(--royal);
+  color: var(--on-royal);
+}
+
+.btn-primary:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--royal);
+}
+
+.btn-primary:active {
+  background: var(--pressed);
+  border-color: var(--royal);
+  color: var(--royal);
+}
+
+/* Secondary — ink frame */
+.btn-secondary {
+  border-color: var(--ink);
+}
+
+/* Ghost — underlined label, no frame */
+.btn-ghost {
+  padding: 0 10px;
+}
+
+.btn-ghost .btn-label {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--faint);
+}
+
+.btn-ghost:hover .btn-label,
+.btn-ghost:active .btn-label {
+  text-decoration-color: transparent;
+}
+
+.btn-secondary:hover,
+.btn-ghost:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--ground);
+}
+
+.btn-secondary:active,
+.btn-ghost:active {
+  background: var(--pressed);
+  border-color: var(--royal);
+  color: var(--ground);
+}
+
+.btn:disabled,
+.btn:disabled:hover {
+  cursor: not-allowed;
+  background: transparent;
+  border-color: var(--rule);
+  color: var(--faint);
+}
+
+.btn-primary:disabled,
+.btn-primary:disabled:hover {
+  background: var(--disabled-fill);
+  border-color: var(--disabled-rule);
+}
+
+.btn-ghost:disabled,
+.btn-ghost:disabled:hover {
+  border-color: transparent;
+}
+
+/* Icon button — square, framed in rule-strong at rest */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 2px solid var(--rule-strong);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color var(--snap), border-color var(--snap), color var(--snap);
+}
+
+/* Bare variant: dismiss / close buttons that sit inside a frame already */
+.icon-btn-bare {
+  border-color: transparent;
+}
+
+.icon-btn:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--ground);
+}
+
+.icon-btn:active {
+  background: var(--pressed);
+  border-color: var(--royal);
+  color: var(--ground);
+}
+
+.icon-btn:disabled,
+.icon-btn:disabled:hover {
+  cursor: not-allowed;
+  background: transparent;
+  border-color: var(--disabled-rule);
+  color: #4A4A4A;
+}
+
+.icon-btn-bare:disabled,
+.icon-btn-bare:disabled:hover {
+  border-color: transparent;
+}
+
+/* Text field */
+.field {
+  height: 36px;
+  min-width: 0;
+  padding: 0 12px;
+  background: var(--ground);
+  border: 2px solid var(--rule-strong);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color var(--snap);
+}
+
+.field::placeholder {
+  color: var(--faint);
+  opacity: 1;
+}
+
+.field:hover {
+  border-color: var(--faint);
+}
+
+.field:focus {
+  border-color: var(--royal-300);
+}
+
+/* Keycap */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  min-width: 22px;
+  padding: 0 6px;
+  border: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Menus — dropdowns, context menu, quick-correct, slash palette share these.
+   A lifted fill with a hard offset shadow, rows flush to the edge,
+   hover is a full invert.
+   ========================================================================== */
+
+.menu {
+  min-width: 232px;
+  padding: 0;
+  background: var(--raised);
+  border: 0;
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--snap), color var(--snap);
+}
+
+.menu-item:focus-visible {
+  outline-offset: -4px;
+}
+
+.menu-item:hover,
+.menu-item.is-highlighted {
+  background: var(--ink);
+  color: var(--ground);
+}
+
+.menu-item:active {
+  background: var(--pressed);
+  color: var(--ground);
+  box-shadow: inset 0 0 0 2px var(--royal);
+}
+
+.menu-item.is-disabled,
+.menu-item.is-disabled:hover,
+.menu-item.is-disabled:active {
+  background: transparent;
+  color: var(--faint);
+  box-shadow: none;
+  cursor: default;
+}
+
+.menu-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.menu-item:hover .menu-item-icon,
+.menu-item.is-highlighted .menu-item-icon {
+  color: inherit;
+}
+
+.menu-item.is-disabled .menu-item-icon {
+  color: var(--faint);
+}
+
+.menu-item-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menu-item-shortcut {
+  flex-shrink: 0;
+  margin-left: 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.menu-item:hover .menu-item-shortcut,
+.menu-item.is-highlighted .menu-item-shortcut {
+  color: #4A4A4A;
+}
+
+.menu-item.is-disabled .menu-item-shortcut {
+  color: var(--faint);
+}
+
+.menu-sep {
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+.menu-label {
+  display: block;
+  padding: 12px 14px 8px;
+}
+
+/* Choice marker — the kit's status squares: filled when chosen, open when not */
+.menu-check {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border: 1px solid var(--faint);
+}
+
+.menu-check.is-on {
+  background: var(--royal-300);
+  border-color: var(--royal-300);
+}
+
+.menu-item:hover .menu-check.is-on,
+.menu-item.is-highlighted .menu-check.is-on {
+  background: var(--royal);
+  border-color: var(--royal);
+}
+
+.menu-item:hover .menu-check:not(.is-on) {
+  border-color: #4A4A4A;
 }
