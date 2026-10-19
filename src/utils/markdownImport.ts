@@ -11,8 +11,33 @@ function escapeForAttribute(text: string): string {
   return escapeForHtml(text).replace(/"/g, '&quot;')
 }
 
+// ![alt](src "title") — alt and title may contain backslash escapes, and the
+// destination may be wrapped in <> (needed for spaces or parentheses)
+const IMAGE = String.raw`!\[((?:\\.|[^\]\\])*)\]\(\s*(<[^>]*>|[^\s)]+)(?:\s+"((?:\\.|[^"\\])*)")?\s*\)`
+const IMAGE_RE = new RegExp(IMAGE, 'g')
+// [![alt](src)](href) — a linked image, as README badges usually are
+const LINKED_IMAGE_RE = new RegExp(String.raw`\[${IMAGE}\]\(\s*(<[^>]*>|[^\s)]+)(?:\s+"(?:\\.|[^"\\])*")?\s*\)`, 'g')
+
+const unescapeMarkdown = (s: string) => s.replace(/\\(.)/g, '$1')
+const destination = (s: string) => s.replace(/^<(.*)>$/, '$1')
+
+function imageHtml(alt: string, src: string, title?: string): string {
+  const titleAttr = title ? ` title="${escapeForAttribute(unescapeMarkdown(title))}"` : ''
+  return `<img src="${escapeForAttribute(destination(src))}" alt="${escapeForAttribute(unescapeMarkdown(alt))}"${titleAttr}>`
+}
+
 function convertInlineMarkdown(text: string): string {
-  let result = escapeForHtml(text)
+  // Images go first: their URLs can contain `_` or `*` that the emphasis
+  // rules below would mangle, so each is parked in a placeholder and put back
+  // once everything else has been converted
+  const images: string[] = []
+  const park = (html: string) => `\uE000${images.push(html) - 1}\uE001`
+  const parked = text
+    .replace(LINKED_IMAGE_RE, (_m, alt: string, src: string, title: string | undefined, href: string) =>
+      park(`<a href="${escapeForAttribute(destination(href))}" target="_blank" rel="noopener">${imageHtml(alt, src, title)}</a>`))
+    .replace(IMAGE_RE, (_m, alt: string, src: string, title: string | undefined) => park(imageHtml(alt, src, title)))
+
+  let result = escapeForHtml(parked)
 
   // Bold+Italic: ***text***
   result = result.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
@@ -31,7 +56,7 @@ function convertInlineMarkdown(text: string): string {
   // Link: [text](url)
   result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
 
-  return result
+  return result.replace(/(\d+)/g, (_m, i: string) => images[Number(i)])
 }
 
 // A list item marker: optional indent, then -, * or + or "N." plus whitespace

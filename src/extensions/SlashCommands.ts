@@ -4,6 +4,8 @@ import Suggestion, { type SuggestionOptions, type SuggestionProps } from '@tipta
 export type SlashCommandState = {
   active: boolean
   query: string
+  /** Where "/query" sits in the document — removed before a command runs */
+  range: SuggestionProps['range'] | null
   clientRect: (() => DOMRect) | null
   command: SuggestionProps['command'] | null
 }
@@ -26,6 +28,7 @@ const suggestion: Omit<SuggestionOptions, 'editor'> = {
         stateCallback?.({
           active: true,
           query: props.query,
+          range: props.range,
           clientRect: props.clientRect as (() => DOMRect) | null,
           command: props.command,
         })
@@ -34,13 +37,14 @@ const suggestion: Omit<SuggestionOptions, 'editor'> = {
         stateCallback?.({
           active: true,
           query: props.query,
+          range: props.range,
           clientRect: props.clientRect as (() => DOMRect) | null,
           command: props.command,
         })
       },
       onKeyDown: (props) => {
         if (props.event.key === 'Escape') {
-          stateCallback?.({ active: false, query: '', clientRect: null, command: null })
+          stateCallback?.({ active: false, query: '', range: null, clientRect: null, command: null })
           return true
         }
         // Let the React component handle arrow keys and Enter
@@ -52,7 +56,7 @@ const suggestion: Omit<SuggestionOptions, 'editor'> = {
         return false
       },
       onExit: () => {
-        stateCallback?.({ active: false, query: '', clientRect: null, command: null })
+        stateCallback?.({ active: false, query: '', range: null, clientRect: null, command: null })
       },
     }
   },

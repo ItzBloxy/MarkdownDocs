@@ -2,7 +2,8 @@ import { Extension } from '@tiptap/core'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { type EditorView } from '@tiptap/pm/view'
 
-const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)$/
+// Not after "!": that's an image, which the Image extension's input rule converts
+const LINK_REGEX = /(?<!!)\[([^\]]+)\]\(([^)]+)\)$/
 
 function isValidUrl(url: string): boolean {
   try {

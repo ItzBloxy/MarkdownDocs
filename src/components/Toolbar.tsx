@@ -2,9 +2,11 @@ import { useState, useRef, useEffect, type ReactNode } from 'react'
 import { useEditorState, type Editor } from '@tiptap/react'
 import {
   Undo2, Redo2, Bold, Italic, Underline, Strikethrough,
-  Code, Braces, Link, List, ListOrdered, Quote, Minus,
+  Code, Braces, Link, ImagePlus, List, ListOrdered, Quote, Minus,
   Table2, EyeOff, ChevronDown,
 } from 'lucide-react'
+import { ImagePopoverHost } from './ImagePopover'
+import { openImagePopover } from '../utils/imagePopover'
 
 const headingOptions = [
   { key: 'p', label: 'Normal text' },
@@ -22,7 +24,7 @@ function getActiveHeading(editor: Editor | null): string {
 }
 
 const TOGGLES = [
-  'bold', 'italic', 'underline', 'strike', 'code', 'codeBlock', 'link',
+  'bold', 'italic', 'underline', 'strike', 'code', 'codeBlock', 'link', 'image',
   'bulletList', 'orderedList', 'blockquote', 'spoiler',
 ] as const
 type Toggle = typeof TOGGLES[number]
@@ -178,6 +180,9 @@ export function Toolbar({ editor, onLinkClick }: ToolbarProps) {
       <ToolButton label="Link" shortcut="Ctrl+K" active={isActive('link')} onClick={() => onLinkClick?.()}>
         <Link size={ICON} />
       </ToolButton>
+      <ToolButton label="Image" active={isActive('image')} onClick={openImagePopover}>
+        <ImagePlus size={ICON} />
+      </ToolButton>
       <div className="tb-sep" />
 
       <ToolButton label="Bullet list" shortcut="Ctrl+Shift+8" active={isActive('bulletList')} onClick={() => run(() => editor?.chain().focus().toggleBulletList().run())}>
@@ -201,6 +206,7 @@ export function Toolbar({ editor, onLinkClick }: ToolbarProps) {
         <EyeOff size={ICON} />
       </ToolButton>
 
+      <ImagePopoverHost editor={editor} />
     </div>
   )
 }

@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   Pilcrow, Heading1, Heading2, Heading3,
-  List, ListOrdered, Quote, Braces, Table2, Minus,
+  List, ListOrdered, Quote, Braces, Table2, Minus, ImagePlus,
 } from 'lucide-react'
 import type { Editor } from '@tiptap/react'
 import { onSlashCommandState, type SlashCommandState } from '../extensions/SlashCommands'
+import { openImagePopover } from '../utils/imagePopover'
 
 interface SlashCommand {
   label: string
@@ -57,6 +58,11 @@ const commands: SlashCommand[] = [
     action: (e) => e.chain().focus().toggleCodeBlock().run(),
   },
   {
+    label: 'Image', description: 'From a web address or your computer', icon: <ImagePlus size={16} />,
+    aliases: ['image', 'img', 'picture', 'photo'],
+    action: () => openImagePopover(),
+  },
+  {
     label: 'Table', description: 'Insert a table', icon: <Table2 size={16} />,
     aliases: ['table'],
     action: (e) => e.chain().focus().insertTable({ rows: 2, cols: 3, withHeaderRow: true }).run(),
@@ -83,7 +89,7 @@ interface SlashCommandPaletteProps {
 
 export function SlashCommandPalette({ editor }: SlashCommandPaletteProps) {
   const [state, setState] = useState<SlashCommandState>({
-    active: false, query: '', clientRect: null, command: null,
+    active: false, query: '', range: null, clientRect: null, command: null,
   })
   const [selectedIndex, setSelectedIndex] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
@@ -101,9 +107,11 @@ export function SlashCommandPalette({ editor }: SlashCommandPaletteProps) {
   const selectItem = useCallback((index: number) => {
     const item = items[index]
     if (!item || item.disabled || !editor) return
+    // Remove the typed "/query" first, so the command acts on a clean block
+    if (state.range) editor.chain().focus().deleteRange(state.range).run()
     item.action(editor)
     setState(s => ({ ...s, active: false }))
-  }, [items, editor])
+  }, [items, editor, state.range])
 
   // Listen for keyboard events from the suggestion plugin
   useEffect(() => {

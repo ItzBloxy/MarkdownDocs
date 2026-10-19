@@ -4,6 +4,7 @@ import { DocIdentity } from './DocIdentity'
 import { MenuDropdown, type MenuItem } from './MenuDropdown'
 import { showToast } from './Toast'
 import { editorToMarkdown } from '../utils/markdownExport'
+import { openImagePopover } from '../utils/imagePopover'
 
 interface FileSystemActions {
   openFile: () => void
@@ -83,6 +84,7 @@ export function TitleMenuBar({ editor, onOpenShortcuts, onLinkClick, onOpenFind,
     { label: 'Code Block', action: () => editor?.chain().focus().toggleCodeBlock().run() },
     { label: 'Horizontal Rule', action: () => editor?.chain().focus().setHorizontalRule().run() },
     SEP,
+    { label: 'Image...', action: openImagePopover },
     { label: 'Table', action: () => editor?.chain().focus().insertTable({ rows: 2, cols: 3, withHeaderRow: true }).run() },
   ]
 

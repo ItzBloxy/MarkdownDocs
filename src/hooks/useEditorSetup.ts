@@ -12,6 +12,7 @@ import { KeyboardShortcuts } from '../extensions/KeyboardShortcuts'
 import { ShiftNumberKeymap } from '../extensions/ShiftNumberKeymap'
 import { SlashCommands } from '../extensions/SlashCommands'
 import { SearchAndReplace } from '../extensions/SearchAndReplace'
+import { ImageNode } from '../extensions/Image'
 import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table'
 
 export function useEditorSetup(onUpdate?: () => void) {
@@ -40,6 +41,7 @@ export function useEditorSetup(onUpdate?: () => void) {
       }),
       UnderlineMark,
       SpoilerMark,
+      ImageNode,
       MarkdownLink,
       BoldItalicInputRule,
       EscapeHandler,

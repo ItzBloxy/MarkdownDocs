@@ -56,6 +56,7 @@ State is React hooks + a single `DocumentContext`. No Redux/Zustand/etc.
 | `ShiftNumberKeymap.ts` | Shift+digit shortcuts (e.g. headings) |
 | `SlashCommands.ts` | `/`-triggered command palette |
 | `SearchAndReplace.ts` | Find/replace with match highlighting |
+| `Image.ts` | Inline image node (extends `@tiptap/extension-image`): broken-image placeholder node view, plus paste/drop of image files (embedded as `data:` URLs via `utils/imageFiles.ts`) |
 
 Plus Tiptap's `StarterKit` and the official `link`, `underline`, `placeholder`, `gapcursor`, `table`, `table-row`, `table-header`, `table-cell` extensions.
 
@@ -69,6 +70,8 @@ The editor stores content as ProseMirror/HTML internally; markdown only exists a
 - `src/utils/markdownExport.ts` — editor HTML → markdown when saving
 
 Any new node/mark added to Tiptap must round-trip through both of these or it will be lost on save.
+
+Images (`![alt](src "title")`, and linked badges `[![alt](src)](href)`) are parked in placeholders before the inline regexes run in `markdownImport`, so `_`/`*` inside image URLs aren't turned into emphasis. The image popover (`components/ImagePopover.tsx`) is opened from the toolbar, Insert menu and `/image` through `utils/imagePopover.ts`, not through App state.
 
 `markdownToHtml` strips a leading UTF-8 BOM and normalizes CRLF/CR to LF before parsing; the block-level loops and their `(.+)$` regexes assume LF-only lines (a stray `\r` used to send the list and blockquote loops into an infinite-loop crash — keep the normalization if you touch this file). Soft-wrapped paragraph lines import as one `<p>` joined with `<br>`, which `markdownExport` writes back as plain newlines — this is what makes open→save round-trips preserve the original line wrapping.
 
@@ -92,7 +95,7 @@ If you change the spellcheck plugin's key or signature, also update the registra
 - **Client-only and desktop-only.** There is no server side. The full web experience needs a File System Access API browser (Chrome/Edge); others get the legacy open/download fallback in `useFileSystem`. `DesktopGate` only enforces a minimum viewport width — API availability is handled per-call inside `useFileSystem`.
 - **`src-tauri/`** holds the desktop shell: `main.rs` delegates to `lib.rs`, which registers the fs/dialog/log plugins and the single `get_initial_file_path` command. `tauri.conf.json` sets `devUrl` to port 5173 — which is why `vite.config.ts` uses `strictPort` (it honors a `PORT` env override for tooling but defaults to 5173).
 - **`package.json` `name` is `"temp-scaffold"`** — leftover from the initial `create-vite` scaffold. Don't "fix" it without checking with the user; it's not consumed anywhere meaningful.
-- **`handlePaste: false`** is set on the Tiptap editor and a custom `clipboardTextParser` splits on newlines into paragraphs. If you touch paste behavior, search for these.
+- **`handlePaste: false`** is set on the Tiptap editor and a custom `clipboardTextParser` splits on newlines into paragraphs. Pasted/dropped image *files* are handled separately by the `imageFiles` plugin in `extensions/Image.ts` (it defers to the normal HTML paste when the clipboard also has a web `<img>`). If you touch paste behavior, search for these.
 - **CSS is split** into modular files imported from `App.tsx` (`chrome.css`, `overlays.css`, `editor.css`, `table.css`, `find-replace.css`, `context-menu.css`, `print.css`, `spellcheck.css`). There's no CSS-in-JS or PostCSS pipeline beyond what Vite does by default.
 - **Visual design is "Raster"** (reference kit in `docs/style-reference/`). `src/index.css` holds the tokens (`--ground`, `--surface`, `--rule`, `--muted`, `--ink`, `--royal`, `--royal-300`…) and shared primitives: `.btn` (`-primary`/`-secondary`/`-ghost`), `.icon-btn`, `.field`, `.kbd`, `.meta`, and `.menu`/`.menu-item` used by every dropdown, context menu and palette. Rules: 0 radius everywhere; hover inverts fill and ink; press rings in `--royal`; focus is a `--royal-300` outline; floating surfaces lift on `--raised` + `--shadow-float` (no outlines); fonts are Schibsted Grotesk (UI and document) + JetBrains Mono (meta). Prefer these classes over inline styles. Tooltips are CSS-only: add `has-tip` + `data-tip="…"`.
 - **Fonts are bundled, not fetched**: `@fontsource-variable/schibsted-grotesk` and `@fontsource/jetbrains-mono` are imported in `src/main.tsx` so the desktop app keeps its type offline. The variable package's family name is `Schibsted Grotesk Variable` (first in `--font-ui`). Don't add Google Fonts links back to `index.html`.

@@ -251,3 +251,43 @@
 .tippy-box[data-theme~='slash'] .tippy-content {
   padding: 0;
 }
+
+/* ---------- Image popover — address, description, upload ---------- */
+
+.image-popover {
+  position: fixed;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 420px;
+  padding: 16px;
+  background: var(--raised);
+  box-shadow: var(--shadow-float);
+}
+
+.image-popover-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-popover-field .field {
+  width: 100%;
+}
+
+.image-popover-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+/* The ghost upload button lines its icon up with the fields' left edge */
+.image-popover-actions > .btn-ghost:first-child {
+  margin-left: -10px;
+}
+
+.image-popover-spacer {
+  flex: 1;
+}

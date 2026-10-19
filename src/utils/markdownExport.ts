@@ -11,6 +11,16 @@ function escapeHtml(text: string): string {
     .replace(/\u200B/g, '') // zero-width spaces
 }
 
+// ![alt](src "title"), wrapped as [![…](…)](href) when the image is linked
+function imageToMarkdown(node: PMNode): string {
+  const { src, alt, title } = node.attrs as { src: string | null; alt: string | null; title: string | null }
+  const dest = /[\s()<>]/.test(src ?? '') ? `<${src}>` : (src ?? '')
+  const titlePart = title ? ` "${title.replace(/["\\]/g, '\\$&')}"` : ''
+  const image = `![${(alt ?? '').replace(/[\\[\]]/g, '\\$&')}](${dest}${titlePart})`
+  const link = node.marks.find(m => m.type.name === 'link')
+  return link ? `[${image}](${link.attrs.href})` : image
+}
+
 function inlineToMarkdown(node: PMNode): string {
   let text = ''
 
@@ -47,6 +57,8 @@ function inlineToMarkdown(node: PMNode): string {
       text += t
     } else if (child.type.name === 'hardBreak') {
       text += '\n'
+    } else if (child.type.name === 'image') {
+      text += imageToMarkdown(child)
     }
   })
 
