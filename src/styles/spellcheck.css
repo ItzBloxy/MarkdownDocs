@@ -1,0 +1,19 @@
+/* Misspelled word — straight purple underline with glow */
+.misspelled {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  text-decoration-style: solid;
+  text-shadow: 0 1px 4px rgba(160, 122, 255, 0.3);
+}
+
+/* Suggestion items in context menu */
+.ctx-item.suggestion {
+  font-weight: 600;
+  color: var(--accent-hover);
+}
+
+.ctx-item.suggestion:hover {
+  background: rgba(160, 122, 255, 0.15);
+}

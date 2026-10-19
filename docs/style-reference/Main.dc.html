@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Raster — UI Kit 01</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B0B0B}
+a{color:#F2F2F2}a:hover{color:#B968F3}
+button{border-radius:0;font:inherit;-webkit-appearance:none;appearance:none}
+.rs-btn{cursor:pointer;transition:background-color 80ms linear,border-color 80ms linear,color 80ms linear}
+.rs-btn:focus-visible{outline:2px solid #B968F3;outline-offset:4px}
+.rs-pri:hover{background-color:#F2F2F2 !important;color:#6A0DAD !important;border-color:#F2F2F2 !important}
+.rs-pri:active{background-color:#E4E4E4 !important;color:#6A0DAD !important;border-color:#6A0DAD !important}
+.rs-sec:hover,.rs-ghost:hover,.rs-icon:hover{background-color:#F2F2F2 !important;color:#0B0B0B !important;border-color:#F2F2F2 !important}
+.rs-sec:active,.rs-ghost:active,.rs-icon:active{background-color:#E4E4E4 !important;color:#0B0B0B !important;border-color:#6A0DAD !important}
+.rs-ghost:hover span,.rs-ghost:active span{text-decoration-color:transparent !important}
+.rs-inv:hover{background-color:#F2F2F2 !important;color:#0B0B0B !important;border-color:#0B0B0B !important}
+.rs-inv:active{background-color:#E4E4E4 !important;color:#0B0B0B !important;border-color:#6A0DAD !important}
+.rs-card{transition:border-color 80ms linear}
+.rs-card:hover{border-color:#F2F2F2 !important}
+.rs-card:hover .rs-cta{background-color:#F2F2F2 !important;color:#0B0B0B !important;border-top-color:#F2F2F2 !important}
+.rs-card:active .rs-cta{background-color:#E4E4E4 !important;color:#0B0B0B !important;box-shadow:inset 0 0 0 2px #6A0DAD}
+.rs-card:focus-visible{outline:2px solid #B968F3;outline-offset:4px}
+.rs-link{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px;text-decoration-color:#5C5C5C}
+.rs-link:hover{color:#F2F2F2;text-decoration-color:#B968F3;text-decoration-thickness:2px}
+.rs-nav:hover{color:#F2F2F2 !important}
+</style>
+</helmet>
+<div style="width: 1440px; min-height: 5600px; box-sizing: border-box; padding: 0 80px 0; background: #0B0B0B; color: #F2F2F2; font-family: 'Schibsted Grotesk', 'Helvetica Neue', Helvetica, sans-serif; display: flex; flex-direction: column">
+
+<!-- ============ HEADER ============ -->
+<header style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 24px; padding: 28px 0 18px; border-bottom: 1px solid #2A2A2A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">
+<span>UI Kit 01 / 04</span>
+<span style="color: #F2F2F2">Raster</span>
+<span>Swiss editorial — dark</span>
+<span style="text-align: right">Mono + Royal Purple</span>
+</header>
+
+<section style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; padding-top: 72px; align-items: end">
+<h1 style="grid-column: span 8; margin: 0; font-size: 232px; line-height: 0.82; font-weight: 800; letter-spacing: -0.06em">Raster<span aria-hidden="true" style="display: inline-block; width: 0.17em; height: 0.17em; margin-left: 0.05em; background: #6A0DAD"></span></h1>
+<div style="grid-column: span 4; display: flex; flex-direction: column; gap: 20px; padding-bottom: 12px">
+<p style="margin: 0; font-size: 21px; line-height: 1.4; font-weight: 500; text-wrap: pretty">A strict-grid kit for a dark portfolio. Hairline rules, flush-left grotesk and one purple signal per view.</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #9C9C9C; text-wrap: pretty">Controls carry no shadows. Hover inverts fill and ink; press holds the invert and rings it in Royal Purple.</p>
+</div>
+</section>
+
+<!-- Tokens -->
+<section style="display: flex; flex-direction: column; gap: 20px; margin-top: 80px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Colour</span>
+<div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); column-gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="height: 112px; background: #0B0B0B; border: 1px solid #2A2A2A"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 700">Ground</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #9C9C9C">#0B0B0B</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="height: 112px; background: #141414; border: 1px solid #2A2A2A"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 700">Surface</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #9C9C9C">#141414</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="height: 112px; background: #2A2A2A"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 700">Rule</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #9C9C9C">#2A2A2A</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="height: 112px; background: #9C9C9C"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 700">Muted</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #9C9C9C">#9C9C9C</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="height: 112px; background: #F2F2F2"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 700">Ink</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #9C9C9C">#F2F2F2</span></div>
+</div>
+<div style="grid-column: span 2; display: flex; flex-direction: column; gap: 12px">
+<div style="height: 112px; background: #6A0DAD; display: flex; align-items: flex-end; padding: 12px; box-sizing: border-box; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #FFFFFF">Fills, pressed rings</div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 700">Royal Purple</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #9C9C9C">#6A0DAD</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="height: 112px; background: #B968F3"></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 15px; font-weight: 700">Royal 300</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #9C9C9C">#B968F3 · lines on black</span></div>
+</div>
+</div>
+</section>
+
+<!-- Specs -->
+<section style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 24px; margin-top: 64px">
+<div style="display: flex; flex-direction: column; gap: 14px; padding-top: 16px; border-top: 1px solid #2A2A2A">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Radius</span>
+<span style="font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">0 px</span>
+<div style="display: flex; align-items: center; gap: 16px; height: 72px">
+<div style="width: 72px; height: 72px; border-top: 2px solid #F2F2F2; border-left: 2px solid #F2F2F2; box-sizing: border-box"></div>
+<span style="font-size: 14px; line-height: 1.5; color: #9C9C9C">Every corner, every component. No exceptions.</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px; padding-top: 16px; border-top: 1px solid #2A2A2A">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Hover</span>
+<span style="font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">Invert</span>
+<div style="display: flex; align-items: center; gap: 12px; height: 72px">
+<div style="flex-shrink: 0; width: 48px; height: 40px; display: flex; align-items: center; justify-content: center; background: #6A0DAD; color: #FFFFFF; font-size: 15px; font-weight: 700">Aa</div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9C9C9C" stroke-width="2" stroke-linecap="square" aria-hidden="true" style="flex-shrink: 0"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg>
+<div style="flex-shrink: 0; width: 48px; height: 40px; display: flex; align-items: center; justify-content: center; background: #F2F2F2; color: #6A0DAD; font-size: 15px; font-weight: 700">Aa</div>
+<span style="font-size: 14px; line-height: 1.5; color: #9C9C9C">Fill and ink swap. No shadows on controls.</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px; padding-top: 16px; border-top: 1px solid #2A2A2A">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Border</span>
+<span style="font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">1 / 2 px</span>
+<div style="display: flex; align-items: center; gap: 16px; height: 72px">
+<div style="display: flex; flex-direction: column; gap: 10px; width: 64px"><span style="height: 1px; background: #F2F2F2"></span><span style="height: 2px; background: #F2F2F2"></span></div>
+<span style="font-size: 14px; line-height: 1.5; color: #9C9C9C">1px for structure, 2px for anything you can press.</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px; padding-top: 16px; border-top: 1px solid #2A2A2A">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Type</span>
+<span style="font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">Aa <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 400; font-size: 32px; letter-spacing: 0">Aa</span></span>
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 4px; height: 72px; font-size: 14px; line-height: 1.5; color: #9C9C9C">
+<span><span style="color: #F2F2F2">Schibsted Grotesk</span> — display &amp; body</span>
+<span><span style="color: #F2F2F2">JetBrains Mono</span> — labels &amp; meta</span>
+</div>
+</div>
+</section>
+
+<!-- ============ 01 BUTTONS ============ -->
+<section style="display: flex; flex-direction: column; gap: 48px; margin-top: 128px">
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; border-top: 2px solid #F2F2F2; padding-top: 20px; align-items: start">
+<span style="grid-column: span 2; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: #9C9C9C">01</span>
+<h2 style="grid-column: span 6; margin: 0; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.04em">Buttons</h2>
+<p style="grid-column: span 4; margin: 0; font-size: 15px; line-height: 1.55; color: #9C9C9C; text-wrap: pretty">Purple fill marks the single primary action. Hover is a straight invert; press keeps the invert, dims it a step and rings it in purple.</p>
+</div>
+
+<div style="display: flex; flex-direction: column">
+<div style="display: grid; grid-template-columns: 200px repeat(5, minmax(0, 1fr)); column-gap: 24px; padding-bottom: 14px; border-bottom: 1px solid #2A2A2A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">
+<span>Variant</span><span>Default</span><span>Hover</span><span>Pressed</span><span>Focus</span><span>Disabled</span>
+</div>
+
+<!-- Primary row -->
+<div style="display: grid; grid-template-columns: 200px repeat(5, minmax(0, 1fr)); column-gap: 24px; align-items: center; padding: 28px 0; border-bottom: 1px solid #1F1F1F">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 17px; font-weight: 700">Primary</span><span style="font-size: 13px; color: #9C9C9C">One per view</span></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD">View project<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: #F2F2F2; color: #6A0DAD; border: 2px solid #F2F2F2">View project<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: #E4E4E4; color: #6A0DAD; border: 2px solid #6A0DAD">View project<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD; outline: 2px solid #B968F3; outline-offset: 4px">View project<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+<div><button disabled="" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: not-allowed; background: #1A1A1A; color: #5C5C5C; border: 2px solid #262626">View project<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+</div>
+
+<!-- Secondary row -->
+<div style="display: grid; grid-template-columns: 200px repeat(5, minmax(0, 1fr)); column-gap: 24px; align-items: center; padding: 28px 0; border-bottom: 1px solid #1F1F1F">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 17px; font-weight: 700">Secondary</span><span style="font-size: 13px; color: #9C9C9C">Supporting actions</span></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: transparent; color: #F2F2F2; border: 2px solid #F2F2F2">Download CV<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 4v11"></path><path d="M6 10l6 6 6-6"></path><path d="M4 20h16"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: #F2F2F2; color: #0B0B0B; border: 2px solid #F2F2F2">Download CV<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 4v11"></path><path d="M6 10l6 6 6-6"></path><path d="M4 20h16"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: #E4E4E4; color: #0B0B0B; border: 2px solid #6A0DAD">Download CV<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 4v11"></path><path d="M6 10l6 6 6-6"></path><path d="M4 20h16"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: transparent; color: #F2F2F2; border: 2px solid #F2F2F2; outline: 2px solid #B968F3; outline-offset: 4px">Download CV<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 4v11"></path><path d="M6 10l6 6 6-6"></path><path d="M4 20h16"></path></svg></button></div>
+<div><button disabled="" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; cursor: not-allowed; background: transparent; color: #5C5C5C; border: 2px solid #2A2A2A">Download CV<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 4v11"></path><path d="M6 10l6 6 6-6"></path><path d="M4 20h16"></path></svg></button></div>
+</div>
+
+<!-- Ghost row -->
+<div style="display: grid; grid-template-columns: 200px repeat(5, minmax(0, 1fr)); column-gap: 24px; align-items: center; padding: 28px 0; border-bottom: 1px solid #1F1F1F">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 17px; font-weight: 700">Ghost</span><span style="font-size: 13px; color: #9C9C9C">Inline, low emphasis</span></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; cursor: pointer; background: transparent; color: #F2F2F2; border: 2px solid transparent"><span style="text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; text-decoration-color: #5C5C5C">All projects</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; cursor: pointer; background: #F2F2F2; color: #0B0B0B; border: 2px solid #F2F2F2"><span>All projects</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; cursor: pointer; background: #E4E4E4; color: #0B0B0B; border: 2px solid #6A0DAD"><span>All projects</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+<div><button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; cursor: pointer; background: transparent; color: #F2F2F2; border: 2px solid transparent; outline: 2px solid #B968F3; outline-offset: 4px"><span style="text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; text-decoration-color: #5C5C5C">All projects</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+<div><button disabled="" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; cursor: not-allowed; background: transparent; color: #5C5C5C; border: 2px solid transparent"><span>All projects</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button></div>
+</div>
+
+<!-- Icon row -->
+<div style="display: grid; grid-template-columns: 200px repeat(5, minmax(0, 1fr)); column-gap: 24px; align-items: center; padding: 28px 0; border-bottom: 1px solid #1F1F1F">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 17px; font-weight: 700">Icon</span><span style="font-size: 13px; color: #9C9C9C">48 × 48, labelled</span></div>
+<div><button aria-label="Open project" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; cursor: pointer; background: transparent; color: #F2F2F2; border: 2px solid #3A3A3A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></button></div>
+<div><button aria-label="Open project" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; cursor: pointer; background: #F2F2F2; color: #0B0B0B; border: 2px solid #F2F2F2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></button></div>
+<div><button aria-label="Open project" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; cursor: pointer; background: #E4E4E4; color: #0B0B0B; border: 2px solid #6A0DAD"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></button></div>
+<div><button aria-label="Open project" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; cursor: pointer; background: transparent; color: #F2F2F2; border: 2px solid #3A3A3A; outline: 2px solid #B968F3; outline-offset: 4px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></button></div>
+<div><button disabled="" aria-label="Open project" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; cursor: not-allowed; background: transparent; color: #4A4A4A; border: 2px solid #222222"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></button></div>
+</div>
+</div>
+
+<!-- Sizes + live -->
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px">
+<div style="grid-column: span 6; display: flex; flex-direction: column; gap: 20px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Sizes — 36 / 48 / 60</span>
+<div style="display: flex; align-items: flex-end; gap: 16px">
+<button style="display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 0; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD">Small</button>
+<button style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; cursor: pointer; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD">Medium</button>
+<button style="display: inline-flex; align-items: center; gap: 12px; height: 60px; padding: 0 28px; border-radius: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; cursor: pointer; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD">Large</button>
+</div>
+</div>
+<div style="grid-column: span 6; display: flex; flex-direction: column; gap: 20px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Live — hover, press, tab to focus</span>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap; min-height: 60px">
+<button class="rs-btn rs-pri" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD">View project<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+<button class="rs-btn rs-sec" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; background: transparent; color: #F2F2F2; border: 2px solid #F2F2F2">Download CV</button>
+<button class="rs-btn rs-ghost" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; border-radius: 0; font-size: 15px; font-weight: 600; white-space: nowrap; background: transparent; color: #F2F2F2; border: 2px solid transparent"><span style="text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; text-decoration-color: #5C5C5C">All projects</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+<button class="rs-btn rs-icon" aria-label="Open project" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; background: transparent; color: #F2F2F2; border: 2px solid #3A3A3A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============ 02 NOTIFICATIONS ============ -->
+<section style="display: flex; flex-direction: column; gap: 48px; margin-top: 128px">
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; border-top: 2px solid #F2F2F2; padding-top: 20px; align-items: start">
+<span style="grid-column: span 2; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: #9C9C9C">02</span>
+<h2 style="grid-column: span 6; margin: 0; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.04em">Notifications</h2>
+<p style="grid-column: span 4; margin: 0; font-size: 15px; line-height: 1.55; color: #9C9C9C; text-wrap: pretty">Severity rises with contrast: purple for info, a white frame for success, hatching for warnings, full inversion for errors, ringed in Royal Purple. Nothing casts a shadow.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+<!-- Info -->
+<div style="min-height: 112px">
+<sc-if value="{{showInfo}}" hint-placeholder-val="{{true}}">
+<div role="status" style="display: grid; grid-template-columns: 48px minmax(0, 1fr) 44px; align-items: start; column-gap: 18px; padding: 20px 10px 20px 20px; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD; border-radius: 0">
+<span aria-hidden="true" style="width: 48px; height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid #FFFFFF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M12 10v9"></path><path d="M12 5v1.5"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 2px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.78)">Info — now</span>
+<span style="font-size: 17px; line-height: 1.4; font-weight: 600">Case study link copied to clipboard.</span>
+</div>
+<button aria-label="Dismiss" onClick="{{dismissInfo}}" class="rs-btn" style="width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; color: #FFFFFF"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></button>
+</div>
+</sc-if>
+</div>
+<!-- Success -->
+<div style="min-height: 112px">
+<sc-if value="{{showSuccess}}" hint-placeholder-val="{{true}}">
+<div role="status" style="display: grid; grid-template-columns: 48px minmax(0, 1fr) 44px; align-items: start; column-gap: 18px; padding: 20px 10px 20px 20px; background: #141414; color: #F2F2F2; border: 2px solid #F2F2F2; border-radius: 0">
+<span aria-hidden="true" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: #F2F2F2; color: #0B0B0B"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M4 12.5l5 5L20 6.5"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 2px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #9C9C9C">Success — now</span>
+<span style="font-size: 17px; line-height: 1.4; font-weight: 600">Message sent. Thanks for getting in touch.</span>
+</div>
+<button aria-label="Dismiss" onClick="{{dismissSuccess}}" class="rs-btn" style="width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; color: #F2F2F2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></button>
+</div>
+</sc-if>
+</div>
+<!-- Warning -->
+<div style="min-height: 112px">
+<sc-if value="{{showWarning}}" hint-placeholder-val="{{true}}">
+<div role="status" style="display: grid; grid-template-columns: 48px minmax(0, 1fr) 44px; align-items: start; column-gap: 18px; padding: 20px 10px 20px 20px; background: #141414; color: #F2F2F2; border: 2px solid #F2F2F2; border-radius: 0">
+<span aria-hidden="true" style="width: 48px; height: 48px; box-sizing: border-box; border: 2px solid #F2F2F2; background: repeating-linear-gradient(-45deg, #F2F2F2 0 3px, #141414 3px 9px)"></span>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 2px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #9C9C9C">Warning — now</span>
+<span style="font-size: 17px; line-height: 1.4; font-weight: 600">This video is large and may load slowly on mobile data.</span>
+<a href="#" class="rs-link" style="align-self: flex-start; margin-top: 4px; font-size: 14px; font-weight: 600; color: #F2F2F2">Load anyway</a>
+</div>
+<button aria-label="Dismiss" onClick="{{dismissWarning}}" class="rs-btn" style="width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; color: #F2F2F2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></button>
+</div>
+</sc-if>
+</div>
+<!-- Error -->
+<div style="min-height: 112px">
+<sc-if value="{{showError}}" hint-placeholder-val="{{true}}">
+<div role="alert" style="display: grid; grid-template-columns: 48px minmax(0, 1fr) 44px; align-items: start; column-gap: 18px; padding: 20px 10px 20px 20px; background: #F2F2F2; color: #0B0B0B; border: 3px solid #6A0DAD; border-radius: 0">
+<span aria-hidden="true" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: #0B0B0B; color: #F2F2F2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"><path d="M12 5v9"></path><path d="M12 18v1.5"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 2px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #4A4A4A">Error — now</span>
+<span style="font-size: 17px; line-height: 1.4; font-weight: 600">Upload failed. The file is over the size limit.</span>
+<button class="rs-btn rs-inv" style="align-self: flex-start; margin-top: 6px; display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 0; font-size: 13px; font-weight: 600; background: #0B0B0B; color: #F2F2F2; border: 2px solid #0B0B0B">Try again</button>
+</div>
+<button aria-label="Dismiss" onClick="{{dismissError}}" class="rs-btn" style="width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; color: #0B0B0B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></button>
+</div>
+</sc-if>
+</div>
+</div>
+
+<!-- Banner -->
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Site banner — full width</span>
+<div style="min-height: 64px">
+<sc-if value="{{showBanner}}" hint-placeholder-val="{{true}}">
+<div role="region" aria-label="Site notice" style="display: grid; grid-template-columns: 200px minmax(0, 1fr) auto 44px; align-items: center; column-gap: 24px; padding-right: 10px; min-height: 64px; border: 2px solid #F2F2F2; border-radius: 0">
+<span style="align-self: stretch; display: flex; align-items: center; padding: 0 20px; background: #F2F2F2; color: #0B0B0B; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase">Site notice</span>
+<span style="font-size: 16px; line-height: 1.4">Some case studies are being rewritten and are offline for now.</span>
+<a href="#" class="rs-link" style="font-size: 15px; font-weight: 600; color: #F2F2F2; white-space: nowrap">Browse the archive</a>
+<button aria-label="Dismiss notice" onClick="{{dismissBanner}}" class="rs-btn" style="width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; color: #F2F2F2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></button>
+</div>
+</sc-if>
+</div>
+<sc-if value="{{anyDismissed}}" hint-placeholder-val="{{false}}">
+<button class="rs-btn rs-ghost" onClick="{{resetToasts}}" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 12px; border-radius: 0; font-size: 14px; font-weight: 600; background: transparent; color: #F2F2F2; border: 2px solid transparent"><span style="text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; text-decoration-color: #5C5C5C">Restore dismissed notifications</span></button>
+</sc-if>
+</div>
+</section>
+
+<!-- ============ 03 PORTFOLIO ============ -->
+<section style="display: flex; flex-direction: column; gap: 64px; margin-top: 128px">
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; border-top: 2px solid #F2F2F2; padding-top: 20px; align-items: start">
+<span style="grid-column: span 2; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: #9C9C9C">03</span>
+<h2 style="grid-column: span 6; margin: 0; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.04em">Portfolio pieces</h2>
+<p style="grid-column: span 4; margin: 0; font-size: 15px; line-height: 1.55; color: #9C9C9C; text-wrap: pretty">The parts a case-study site repeats on every page. Bracketed text is yours to replace.</p>
+</div>
+
+<!-- Nav -->
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">03.1 — Navigation bar</span>
+<nav aria-label="Primary" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: center; height: 76px; border-top: 1px solid #2A2A2A; border-bottom: 1px solid #2A2A2A">
+<a href="#" style="grid-column: span 3; display: flex; align-items: center; gap: 12px; color: #F2F2F2; text-decoration: none; font-size: 19px; font-weight: 800; letter-spacing: -0.02em"><span aria-hidden="true" style="width: 14px; height: 14px; background: #6A0DAD"></span>[Your Name]</a>
+<div style="grid-column: span 5; display: flex; gap: 32px; align-items: center; align-self: stretch">
+<a href="#" aria-current="page" style="display: flex; align-items: center; color: #F2F2F2; text-decoration: none; font-size: 15px; font-weight: 600; border-bottom: 3px solid #B968F3; padding-top: 3px; box-sizing: border-box">Work</a>
+<a href="#" class="rs-nav" style="display: flex; align-items: center; color: #9C9C9C; text-decoration: none; font-size: 15px; font-weight: 600">About</a>
+<a href="#" class="rs-nav" style="display: flex; align-items: center; color: #9C9C9C; text-decoration: none; font-size: 15px; font-weight: 600">Archive</a>
+<a href="#" class="rs-nav" style="display: flex; align-items: center; color: #9C9C9C; text-decoration: none; font-size: 15px; font-weight: 600">Contact</a>
+</div>
+<div style="grid-column: span 4; display: flex; justify-content: flex-end; align-items: center; gap: 24px">
+<span style="display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C"><span aria-hidden="true" style="width: 8px; height: 8px; background: #B968F3"></span>Available for work</span>
+<a href="#" class="rs-btn rs-pri" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 0; font-size: 14px; font-weight: 600; text-decoration: none; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD">Get in touch</a>
+</div>
+</nav>
+</div>
+
+<!-- Section header -->
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">03.2 — Section header</span>
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: end; padding-top: 20px; border-top: 1px solid #F2F2F2">
+<span style="grid-column: span 2; align-self: start; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: #9C9C9C">(01)</span>
+<h3 style="grid-column: span 7; margin: 0; font-size: 88px; line-height: 0.9; font-weight: 800; letter-spacing: -0.05em">Selected work</h3>
+<div style="grid-column: span 3; display: flex; justify-content: flex-end">
+<a href="#" class="rs-btn rs-ghost" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; font-size: 15px; font-weight: 600; color: #F2F2F2; text-decoration: none"><span style="text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; text-decoration-color: #5C5C5C">Full archive</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+</div>
+
+<!-- Cards -->
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">03.3 — Project card · default / hover / featured (cards 1 and 3 are live)</span>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start">
+
+<a href="#" class="rs-card" style="display: flex; flex-direction: column; background: #0B0B0B; border: 2px solid #2A2A2A; color: #F2F2F2; text-decoration: none">
+<div style="aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, #111111 0 12px, #171717 12px 24px); display: flex; align-items: flex-end; justify-content: space-between; padding: 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A8A"><span>[Project image]</span><span>4:3</span></div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 20px 22px; border-top: 2px solid #2A2A2A">
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C"><span>[Client] — [Year]</span><span>P—01</span></div>
+<h4 style="margin: 0; font-size: 26px; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em">[Project title]</h4>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #9C9C9C">[One line on the problem and your role in solving it.]</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #3A3A3A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #D6D6D6">Branding</span>
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #3A3A3A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #D6D6D6">Web</span>
+</div>
+</div>
+<div class="rs-cta" style="display: flex; justify-content: space-between; align-items: center; height: 52px; padding: 0 20px; border-top: 1px solid #2A2A2A; font-size: 15px; font-weight: 600; color: #F2F2F2; transition: background-color 120ms linear, color 120ms linear">View case study<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></div>
+</a>
+
+<a href="#" style="display: flex; flex-direction: column; background: #0B0B0B; border: 2px solid #F2F2F2; color: #F2F2F2; text-decoration: none">
+<div style="aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, #111111 0 12px, #171717 12px 24px); display: flex; align-items: flex-end; justify-content: space-between; padding: 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A8A"><span>[Project image]</span><span>4:3</span></div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 20px 22px; border-top: 2px solid #2A2A2A">
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C"><span>[Client] — [Year]</span><span>P—02</span></div>
+<h4 style="margin: 0; font-size: 26px; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em">[Project title]</h4>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #9C9C9C">[One line on the problem and your role in solving it.]</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #3A3A3A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #D6D6D6">Interface</span>
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #3A3A3A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #D6D6D6">Product</span>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; height: 52px; padding: 0 20px; border-top: 1px solid #F2F2F2; background: #F2F2F2; font-size: 15px; font-weight: 600; color: #0B0B0B">View case study<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></div>
+</a>
+
+<a href="#" class="rs-card" style="display: flex; flex-direction: column; background: #0B0B0B; border: 2px solid #2A2A2A; color: #F2F2F2; text-decoration: none">
+<div style="position: relative; aspect-ratio: 4 / 3; background: repeating-linear-gradient(135deg, #111111 0 12px, #171717 12px 24px); display: flex; align-items: flex-end; justify-content: space-between; padding: 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8A8A"><span style="position: absolute; top: 0; left: 0; display: inline-flex; align-items: center; height: 30px; padding: 0 12px; background: #F2F2F2; color: #0B0B0B; font-weight: 700">New</span><span>[Project image]</span><span>4:3</span></div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 20px 22px; border-top: 2px solid #2A2A2A">
+<div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C"><span>[Client] — [Year]</span><span>P—03</span></div>
+<h4 style="margin: 0; font-size: 26px; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em">[Project title]</h4>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #9C9C9C">[One line on the problem and your role in solving it.]</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #6A0DAD; background: #6A0DAD; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #FFFFFF">Featured</span>
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #3A3A3A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #D6D6D6">Motion</span>
+</div>
+</div>
+<div class="rs-cta" style="display: flex; justify-content: space-between; align-items: center; height: 52px; padding: 0 20px; border-top: 1px solid #2A2A2A; font-size: 15px; font-weight: 600; color: #F2F2F2; transition: background-color 120ms linear, color 120ms linear">View case study<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></div>
+</a>
+</div>
+</div>
+
+<!-- Tags & badges -->
+<div style="display: flex; flex-direction: column; gap: 20px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">03.4 — Tags, badges, status</span>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 24px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #3A3A3A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #D6D6D6">Branding</span>
+<span style="font-size: 13px; color: #9C9C9C">Tag</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #F2F2F2; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #F2F2F2">Branding</span>
+<span style="font-size: 13px; color: #9C9C9C">Tag — hover</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border: 1px solid #6A0DAD; background: #6A0DAD; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #FFFFFF">Branding<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></span>
+<span style="font-size: 13px; color: #9C9C9C">Tag — selected</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; background: #F2F2F2; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #0B0B0B">New</span>
+<span style="font-size: 13px; color: #9C9C9C">Badge — solid</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 1px solid #B968F3; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #B968F3">Award</span>
+<span style="font-size: 13px; color: #9C9C9C">Badge — accent</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<span style="display: inline-flex; align-items: center; gap: 10px; height: 28px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #F2F2F2"><span aria-hidden="true" style="width: 8px; height: 8px; background: #B968F3"></span>Available</span>
+<span style="font-size: 13px; color: #9C9C9C">Status — open</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<span style="display: inline-flex; align-items: center; gap: 10px; height: 28px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C"><span aria-hidden="true" style="width: 8px; height: 8px; box-sizing: border-box; border: 1px solid #9C9C9C"></span>Booked</span>
+<span style="font-size: 13px; color: #9C9C9C">Status — closed</span>
+</div>
+</div>
+</div>
+
+<!-- Footer / contact -->
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">03.5 — Contact block &amp; footer</span>
+<footer style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; row-gap: 56px; padding-top: 40px; border-top: 2px solid #F2F2F2">
+<div style="grid-column: span 8; display: flex; flex-direction: column; gap: 32px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: #9C9C9C">(04) Contact</span>
+<p style="margin: 0; font-size: 96px; line-height: 0.9; font-weight: 800; letter-spacing: -0.055em; text-wrap: balance">Have a project in mind?</p>
+<a href="#" class="rs-link" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 14px; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; color: #F2F2F2">[name@domain.com]<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></a>
+</div>
+<div style="grid-column: span 4; align-self: end; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Elsewhere</span>
+<a href="#" class="rs-link" style="align-self: flex-start; font-size: 16px; font-weight: 600; color: #F2F2F2">LinkedIn</a>
+<a href="#" class="rs-link" style="align-self: flex-start; font-size: 16px; font-weight: 600; color: #F2F2F2">Behance</a>
+<a href="#" class="rs-link" style="align-self: flex-start; font-size: 16px; font-weight: 600; color: #F2F2F2">GitHub</a>
+<a href="#" class="rs-link" style="align-self: flex-start; font-size: 16px; font-weight: 600; color: #F2F2F2">Instagram</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Based in</span>
+<span style="font-size: 16px; font-weight: 600">[City, Country]</span>
+<span style="margin-top: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Time zone</span>
+<span style="font-size: 16px; font-weight: 600">[UTC ±0]</span>
+</div>
+</div>
+<div style="grid-column: span 12; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid #2A2A2A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">
+<span>© [Year] [Your Name]</span>
+<a href="#" class="rs-link" style="display: inline-flex; align-items: center; gap: 8px; color: #F2F2F2">Back to top<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 20V5"></path><path d="M6 11l6-6 6 6"></path></svg></a>
+</div>
+</footer>
+</div>
+</section>
+
+<!-- ============ 04 OVERLAYS & CONTROLS ============ -->
+<section style="display: flex; flex-direction: column; gap: 48px; margin-top: 128px">
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; border-top: 2px solid #F2F2F2; padding-top: 20px; align-items: start">
+<span style="grid-column: span 2; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: #9C9C9C">04</span>
+<h2 style="grid-column: span 6; margin: 0; font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.04em">Overlays &amp; controls</h2>
+<p style="grid-column: span 4; margin: 0; font-size: 15px; line-height: 1.55; color: #9C9C9C; text-wrap: pretty">The dialog is the only thing that casts a shadow: a quiet 8px offset in pure black. Where purple has to read as a thin line on black, Royal 300 stands in.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; row-gap: 64px">
+<!-- Dialog -->
+<div style="grid-column: span 7; display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">04.1 — Dialog (live)</span>
+<div style="position: relative; height: 460px; border: 1px solid #2A2A2A; background: repeating-linear-gradient(0deg, #0B0B0B 0 31px, #161616 31px 32px); overflow: hidden">
+<sc-if value="{{modalOpen}}" hint-placeholder-val="{{true}}">
+<div style="position: absolute; inset: 0; background: rgba(11, 11, 11, 0.8); display: flex; align-items: center; justify-content: center">
+<div role="dialog" aria-modal="true" aria-labelledby="rs-dialog-title" style="width: 470px; background: #111111; border: 2px solid #F2F2F2; border-radius: 0; box-shadow: 8px 8px 0 0 #000000; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; height: 52px; padding: 0 6px 0 24px; border-bottom: 1px solid #2A2A2A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">
+<span>Résumé</span>
+<button aria-label="Close dialog" onClick="{{closeModal}}" class="rs-btn" style="width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; color: #F2F2F2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 28px 24px 32px">
+<h4 id="rs-dialog-title" style="margin: 0; font-size: 32px; line-height: 1.05; font-weight: 800; letter-spacing: -0.03em">Download résumé</h4>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #9C9C9C">A one-page PDF with experience, selected clients and contact details.</p>
+</div>
+<div style="display: flex; justify-content: flex-end; gap: 12px; padding: 0 24px 24px">
+<button class="rs-btn rs-sec" onClick="{{closeModal}}" style="display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 0; font-size: 15px; font-weight: 600; background: transparent; color: #F2F2F2; border: 2px solid #F2F2F2">Cancel</button>
+<button class="rs-btn rs-pri" onClick="{{closeModal}}" style="display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 18px; border-radius: 0; font-size: 15px; font-weight: 600; background: #6A0DAD; color: #FFFFFF; border: 2px solid #6A0DAD">Download PDF<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 4v11"></path><path d="M6 10l6 6 6-6"></path><path d="M4 20h16"></path></svg></button>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{modalClosed}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center">
+<button class="rs-btn rs-sec" onClick="{{openModal}}" style="display: inline-flex; align-items: center; height: 48px; padding: 0 20px; border-radius: 0; font-size: 15px; font-weight: 600; background: #0B0B0B; color: #F2F2F2; border: 2px solid #F2F2F2">Open dialog</button>
+</div>
+</sc-if>
+</div>
+</div>
+
+<!-- Tooltip + Tabs -->
+<div style="grid-column: span 5; display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">04.2 — Tooltip</span>
+<div style="height: 168px; border: 1px solid #2A2A2A; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 32px; box-sizing: border-box">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 14px">
+<div role="tooltip" id="rs-tip" style="position: relative; padding: 9px 12px; background: #F2F2F2; color: #0B0B0B; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; white-space: nowrap">Copy email address<span aria-hidden="true" style="position: absolute; left: 50%; bottom: -5px; width: 10px; height: 10px; margin-left: -5px; background: #F2F2F2; transform: rotate(45deg)"></span></div>
+<button class="rs-btn rs-icon" aria-label="Copy email address" aria-describedby="rs-tip" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; background: transparent; color: #F2F2F2; border: 2px solid #F2F2F2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="8" y="8" width="13" height="13"></rect><path d="M16 8V3H3v13h5"></path></svg></button>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">04.3 — Tabs (live)</span>
+<div role="tablist" aria-label="Filter projects" style="display: flex; border-bottom: 1px solid #2A2A2A">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+<button role="tab" aria-selected="{{t.sel}}" onClick="{{t.pick}}" class="rs-btn" style="height: 52px; padding: 0 18px; margin-bottom: -1px; background: transparent; border: 0; border-bottom: 3px solid {{t.bar}}; border-radius: 0; color: {{t.color}}; font-size: 15px; font-weight: 600">{{t.label}}</button>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #9C9C9C">Showing <span style="color: #F2F2F2; font-weight: 600">{{tabLabel}}</span> projects.</p>
+</div>
+</div>
+
+<!-- Progress -->
+<div style="grid-column: span 6; display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">04.4 — Progress</span>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 15px"><span>Uploading case-study.pdf</span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px">64%</span></div>
+<div role="progressbar" aria-label="Upload progress" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" style="height: 16px; padding: 2px; box-sizing: border-box; border: 1px solid #3A3A3A; background: #111111"><div style="width: 64%; height: 100%; background: #6A0DAD"></div></div>
+</div>
+<ol aria-label="Project stages" style="list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px">
+<li style="display: flex; flex-direction: column; gap: 10px"><span style="height: 6px; background: #F2F2F2"></span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">01 Brief</span></li>
+<li style="display: flex; flex-direction: column; gap: 10px"><span style="height: 6px; background: #F2F2F2"></span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">02 Research</span></li>
+<li aria-current="step" style="display: flex; flex-direction: column; gap: 10px"><span style="height: 6px; background: #B968F3"></span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #F2F2F2">03 Design</span></li>
+<li style="display: flex; flex-direction: column; gap: 10px"><span style="height: 6px; background: #2A2A2A"></span><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">04 Launch</span></li>
+</ol>
+</div>
+
+<!-- Pagination -->
+<div style="grid-column: span 6; display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">04.5 — Pagination (live)</span>
+<nav aria-label="Pagination" style="display: flex; align-items: center; gap: 8px">
+<button class="rs-btn rs-icon" aria-label="Previous page" onClick="{{prevPage}}" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; background: transparent; color: #F2F2F2; border: 2px solid #3A3A3A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+<sc-for list="{{pages}}" as="p" hint-placeholder-count="5">
+<button class="rs-btn rs-icon" aria-label="Page {{p.n}}" aria-current="{{p.current}}" onClick="{{p.pick}}" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; background: {{p.bg}}; color: {{p.fg}}; border: 2px solid {{p.border}}; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; font-weight: 500">{{p.label}}</button>
+</sc-for>
+<button class="rs-btn rs-icon" aria-label="Next page" onClick="{{nextPage}}" style="width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 0; background: transparent; color: #F2F2F2; border: 2px solid #3A3A3A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+<span style="margin-left: 16px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">Page {{pageLabel}} / 05</span>
+</nav>
+</div>
+</div>
+</section>
+
+<!-- Colophon -->
+<div style="margin-top: auto; padding: 96px 0 40px">
+<div style="display: flex; justify-content: space-between; padding-top: 18px; border-top: 1px solid #2A2A2A; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9C9C9C">
+<span>End of kit 01 — Raster</span>
+<span>Radius 0 · Blur 0 · One accent</span>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const dis = st.dismissed || {};
+    const dismiss = (key) => () => {
+      const cur = (this.state && this.state.dismissed) || {};
+      const next = Object.assign({}, cur);
+      next[key] = true;
+      this.setState({ dismissed: next });
+    };
+    const tabNames = ['All', 'Branding', 'Interface', 'Motion'];
+    const tab = typeof st.tab === 'number' ? st.tab : 0;
+    const page = typeof st.page === 'number' ? st.page : 2;
+    const modalOpen = st.modalOpen === undefined ? true : st.modalOpen;
+    return {
+      showInfo: !dis.info,
+      showSuccess: !dis.success,
+      showWarning: !dis.warning,
+      showError: !dis.error,
+      showBanner: !dis.banner,
+      dismissInfo: dismiss('info'),
+      dismissSuccess: dismiss('success'),
+      dismissWarning: dismiss('warning'),
+      dismissError: dismiss('error'),
+      dismissBanner: dismiss('banner'),
+      anyDismissed: Object.keys(dis).length > 0,
+      resetToasts: () => this.setState({ dismissed: {} }),
+      tabs: tabNames.map((label, i) => ({
+        label: label,
+        sel: i === tab ? 'true' : 'false',
+        color: i === tab ? '#F2F2F2' : '#9C9C9C',
+        bar: i === tab ? '#B968F3' : 'transparent',
+        pick: () => this.setState({ tab: i })
+      })),
+      tabLabel: tab === 0 ? 'all' : tabNames[tab].toLowerCase(),
+      pages: [1, 2, 3, 4, 5].map((n) => ({
+        n: n,
+        label: '0' + n,
+        current: n === page ? 'page' : 'false',
+        bg: n === page ? '#6A0DAD' : 'transparent',
+        fg: n === page ? '#FFFFFF' : '#F2F2F2',
+        border: n === page ? '#6A0DAD' : '#3A3A3A',
+        pick: () => this.setState({ page: n })
+      })),
+      pageLabel: '0' + page,
+      prevPage: () => this.setState({ page: Math.max(1, page - 1) }),
+      nextPage: () => this.setState({ page: Math.min(5, page + 1) }),
+      modalOpen: modalOpen,
+      modalClosed: !modalOpen,
+      openModal: () => this.setState({ modalOpen: true }),
+      closeModal: () => this.setState({ modalOpen: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

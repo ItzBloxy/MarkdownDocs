@@ -1,0 +1,78 @@
+:root {
+  --bg-canvas: #0c0712;
+  --bg-surface: #130e1e;
+  --bg-surface-alt: #161024;
+  --bg-page: #ffffff;
+  --bg-input: #140f22;
+  --bg-hover: #261c3e;
+  --bg-active: #33245a;
+  --border-primary: #2a2044;
+  --border-light: #362a54;
+  --text-primary: #e6dff2;
+  --text-secondary: #a99cc6;
+  --text-muted: #6e5f8a;
+  --text-page: #000000;
+  --accent: #a07aff;
+  --accent-hover: #b999ff;
+  --accent-dim: #7b52e0;
+  --accent-bg: rgba(160, 122, 255, 0.10);
+  --accent-bg-strong: rgba(160, 122, 255, 0.15);
+  --selection: rgba(160, 122, 255, 0.30);
+  --code-bg: #faf8fd;
+  --code-bg-hover: #f3eef8;
+  --success: #6bffa8;
+  --danger: #ff6b8a;
+
+  --font-ui: 'Figtree', system-ui, sans-serif;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--selection);
+  color: inherit;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-primary) transparent;
+}

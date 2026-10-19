@@ -1,0 +1,165 @@
+/* Table block styling */
+.tiptap table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+  table-layout: auto;
+}
+
+.tiptap th,
+.tiptap td {
+  border: 1px solid #e0dce6;
+  padding: 8px 12px;
+  min-width: 80px;
+  position: relative;
+  vertical-align: top;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-page);
+}
+
+.tiptap th {
+  background: transparent;
+  font-weight: 600;
+  text-align: left;
+}
+
+.tiptap td {
+  background: transparent;
+}
+
+.tiptap tr:hover td {
+  background: #faf8fd;
+}
+
+/* Selected cell */
+.tiptap .selectedCell {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  background: rgba(160, 122, 255, 0.04);
+}
+
+.tiptap th.selectedCell {
+  background: rgba(160, 122, 255, 0.04);
+}
+
+/* Cell content */
+.tiptap th p,
+.tiptap td p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Table wrapper for positioning toolbar and edge buttons */
+.table-wrapper {
+  position: relative;
+  margin: 8px 0;
+}
+
+/* Add column button (right edge) */
+.table-add-col {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+}
+
+.table-wrapper:hover .table-add-col {
+  opacity: 1;
+}
+
+.table-add-col:hover {
+  background: var(--accent-hover);
+}
+
+/* Add row button (bottom edge) */
+.table-add-row {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+}
+
+.table-wrapper:hover .table-add-row {
+  opacity: 1;
+}
+
+.table-add-row:hover {
+  background: var(--accent-hover);
+}
+
+/* Table floating toolbar */
+.table-toolbar {
+  position: absolute;
+  top: -36px;
+  left: 0;
+  display: flex;
+  gap: 2px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  padding: 3px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+}
+
+.table-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.table-toolbar button:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.table-toolbar button.danger:hover {
+  background: rgba(255, 107, 138, 0.15);
+  color: var(--danger);
+}
+
+.table-toolbar .sep {
+  width: 1px;
+  background: var(--border-primary);
+  margin: 2px 4px;
+}
