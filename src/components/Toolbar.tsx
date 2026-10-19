@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, type ReactNode } from 'react'
-import { type Editor } from '@tiptap/react'
+import { useEditorState, type Editor } from '@tiptap/react'
 import {
   Undo2, Redo2, Bold, Italic, Underline, Strikethrough,
   Code, Braces, Link, List, ListOrdered, Quote, Minus,
@@ -19,6 +19,24 @@ function getActiveHeading(editor: Editor | null): string {
   if (editor.isActive('heading', { level: 2 })) return 'h2'
   if (editor.isActive('heading', { level: 3 })) return 'h3'
   return 'p'
+}
+
+const TOGGLES = [
+  'bold', 'italic', 'underline', 'strike', 'code', 'codeBlock', 'link',
+  'bulletList', 'orderedList', 'blockquote', 'spoiler',
+] as const
+type Toggle = typeof TOGGLES[number]
+
+// Everything the toolbar shows about the current selection. Read through
+// useEditorState so the toolbar re-renders on every transaction that changes
+// it — useEditor alone doesn't re-render on selection-only transactions.
+function selectToolbarState({ editor }: { editor: Editor | null }) {
+  return {
+    active: Object.fromEntries(TOGGLES.map(name => [name, editor?.isActive(name) ?? false])) as Record<Toggle, boolean>,
+    heading: getActiveHeading(editor),
+    canUndo: editor?.can().undo() ?? false,
+    canRedo: editor?.can().redo() ?? false,
+  }
 }
 
 const ICON = 18
@@ -56,10 +74,10 @@ interface ToolbarProps {
 export function Toolbar({ editor, onLinkClick }: ToolbarProps) {
   const [headingOpen, setHeadingOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const activeHeading = getActiveHeading(editor)
+  const state = useEditorState({ editor, selector: selectToolbarState })
+  const activeHeading = state?.heading ?? 'p'
 
-  const isActive = (name: string, attrs?: Record<string, unknown>) =>
-    editor?.isActive(name, attrs) ?? false
+  const isActive = (name: Toggle) => state?.active[name] ?? false
 
   const run = (cmd: () => boolean | undefined) => {
     cmd()
@@ -97,10 +115,10 @@ export function Toolbar({ editor, onLinkClick }: ToolbarProps) {
 
   return (
     <div className="toolbar-bar" role="toolbar" aria-label="Formatting">
-      <ToolButton label="Undo" shortcut="Ctrl+Z" disabled={!editor?.can().undo()} onClick={() => editor?.chain().focus().undo().run()}>
+      <ToolButton label="Undo" shortcut="Ctrl+Z" disabled={!state?.canUndo} onClick={() => editor?.chain().focus().undo().run()}>
         <Undo2 size={ICON} />
       </ToolButton>
-      <ToolButton label="Redo" shortcut="Ctrl+Shift+Z" disabled={!editor?.can().redo()} onClick={() => editor?.chain().focus().redo().run()}>
+      <ToolButton label="Redo" shortcut="Ctrl+Shift+Z" disabled={!state?.canRedo} onClick={() => editor?.chain().focus().redo().run()}>
         <Redo2 size={ICON} />
       </ToolButton>
       <div className="tb-sep" />
