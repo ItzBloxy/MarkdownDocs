@@ -9,7 +9,6 @@ import {
   ChevronRight, Plus, Check,
 } from 'lucide-react'
 import type { ContextType } from '../hooks/useContextMenu'
-import type { useSpellcheck } from '../hooks/useSpellcheck'
 import '../styles/context-menu.css'
 
 interface ContextMenuProps {
@@ -20,7 +19,6 @@ interface ContextMenuProps {
   editor: Editor
   onClose: () => void
   onRequestLink: () => void
-  spellcheck?: ReturnType<typeof useSpellcheck>
 }
 
 interface MenuItem {
@@ -118,7 +116,7 @@ function LanguageSubMenu({ editor, onClose }: { editor: Editor; onClose: () => v
   )
 }
 
-export function ContextMenu({ x, y, context, targetEl, editor, onClose, onRequestLink, spellcheck }: ContextMenuProps) {
+export function ContextMenu({ x, y, context, targetEl, editor, onClose, onRequestLink }: ContextMenuProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [openSub, setOpenSub] = useState<string | null>(null)
   const subTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -170,39 +168,6 @@ export function ContextMenu({ x, y, context, targetEl, editor, onClose, onReques
 
   // Build items based on context
   const items: MenuItem[] = []
-
-  // Spellcheck suggestions — prepend if right-clicked a misspelled word
-  if (spellcheck) {
-    // Find cursor position from click coordinates
-    const pos = editor.view.posAtCoords({ left: x, top: y })
-    if (pos) {
-      const misspelled = spellcheck.getMisspelledAt(pos.pos)
-      if (misspelled) {
-        const suggestions = spellcheck.getSuggestions(misspelled.word)
-        if (suggestions.length > 0) {
-          for (const suggestion of suggestions) {
-            items.push({
-              label: suggestion,
-              action: () => spellcheck.replaceWord(misspelled.from, misspelled.to, suggestion),
-              className: 'suggestion',
-            } as MenuItem)
-          }
-        } else {
-          items.push({ label: 'No suggestions', disabled: true } as MenuItem)
-        }
-        items.push({ divider: true, label: '' })
-        items.push({
-          label: 'Add to Dictionary',
-          action: () => spellcheck.addToDictionary(misspelled.word),
-        })
-        items.push({
-          label: 'Ignore All',
-          action: () => spellcheck.ignoreAll(misspelled.word),
-        })
-        items.push({ divider: true, label: '' })
-      }
-    }
-  }
 
   const isActive = (name: string) => editor.isActive(name)
 

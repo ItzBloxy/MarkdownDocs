@@ -2,12 +2,17 @@
    Raster — MarkdownDocs design system
    Source: docs/style-reference (UI Kit 01, "Swiss editorial — dark").
    Radius 0 everywhere. Hover inverts fill and ink; press holds the invert
-   and rings it in Royal Purple. Controls carry no shadows — only dialogs do.
-   1px borders for structure, 2px for anything you can press.
+   and rings it in the accent. Controls carry no shadows — only floating
+   surfaces do. 1px borders for structure, 2px for anything you can press.
+
+   Themes (ThemeContext): dark is the default; light flips the neutrals via
+   :root[data-theme='light']. The accent is one user-chosen color set inline
+   on <html> as --accent plus a lighter --accent-tint and darker
+   --accent-shade; each mode picks which variant reads on its background.
    ========================================================================== */
 
 :root {
-  /* Palette */
+  /* Neutrals — dark */
   --ground: #0B0B0B;        /* app background */
   --surface: #141414;       /* the page, bars */
   --raised: #1A1A1A;        /* floating surfaces: menus, popovers, dialogs */
@@ -15,25 +20,67 @@
   --rule-soft: #1F1F1F;     /* row dividers */
   --rule-strong: #3A3A3A;   /* borders of pressable things at rest */
   --muted: #9C9C9C;         /* secondary text, meta */
-  --faint: #5C5C5C;         /* disabled text, link underlines, placeholders */
+  --faint: #5C5C5C;         /* link underlines, placeholders */
   --ink-soft: #D6D6D6;      /* tag text, quotes */
-  --ink: #F2F2F2;           /* primary text */
-  --pressed: #E4E4E4;       /* held invert */
-  --royal: #6A0DAD;         /* fills, pressed rings — one signal per view */
-  --royal-300: #B968F3;     /* purple as a line on black */
-  --on-royal: #FFFFFF;
+  --ink: #F2F2F2;           /* primary text; the hover invert fill */
+  --ink-body: #E4E4E4;      /* running text on the page */
+  --pressed: #E4E4E4;       /* held invert, a step off --ink */
   --disabled-fill: #1A1A1A;
   --disabled-rule: #262626;
+  --disabled-ink: #4A4A4A;
+  --muted-on-invert: #4A4A4A; /* secondary text on a hovered (inverted) row */
+  --row-hover: #181818;
+  --canvas-line: #151515;   /* the 32px raster ruled on the ground */
+  --scrim: rgba(11, 11, 11, 0.8);
+  --shadow-float: 8px 8px 0 0 #000000;
+
+  /* Accent — Royal Purple until the Themes menu says otherwise */
+  --accent: #6A0DAD;        /* fills: primary buttons, selection, toasts */
+  --accent-tint: #B968F3;   /* lighter variant */
+  --accent-shade: #6A0DAD;  /* darker variant */
+  --on-accent: #FFFFFF;     /* text on an accent fill */
+  --accent-line: var(--accent-tint);       /* accent as a line or mark on the ground */
+  --accent-on-invert: var(--accent-shade); /* accent on a hovered / pressed surface */
 
   /* Type */
   --font-ui: 'Schibsted Grotesk Variable', 'Schibsted Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
-  /* Floating surfaces lift on fill + a hard offset shadow, never an outline */
-  --shadow-float: 8px 8px 0 0 #000000;
-
   /* Motion: state changes snap, they don't glide */
   --snap: 80ms linear;
+
+  color-scheme: dark;
+}
+
+/* Light: the same kit with ground and ink swapped. The invert still reads as
+   an invert (hover fills with near-black ink), and the accent's darker shade
+   becomes the line color. */
+:root[data-theme='light'] {
+  --ground: #F0F0F0;
+  --surface: #FAFAFA;
+  --raised: #FFFFFF;
+  --rule: #D4D4D4;
+  --rule-soft: #E6E6E6;
+  --rule-strong: #BABABA;
+  --muted: #666666;
+  --faint: #9A9A9A;
+  --ink-soft: #2B2B2B;
+  --ink: #0B0B0B;
+  --ink-body: #1C1C1C;
+  --pressed: #2A2A2A;
+  --disabled-fill: #E6E6E6;
+  --disabled-rule: #D9D9D9;
+  --disabled-ink: #B4B4B4;
+  --muted-on-invert: #A3A3A3;
+  --row-hover: #F3F3F3;
+  --canvas-line: #E4E4E4;
+  --scrim: rgba(240, 240, 240, 0.8);
+  --shadow-float: 8px 8px 0 0 #C4C4C4;
+
+  --accent-line: var(--accent-shade);
+  --accent-on-invert: var(--accent-tint);
+
+  color-scheme: light;
 }
 
 *,
@@ -67,12 +114,12 @@ input {
 }
 
 ::selection {
-  background: var(--royal);
-  color: var(--on-royal);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 :focus-visible {
-  outline: 2px solid var(--royal-300);
+  outline: 2px solid var(--accent-line);
   outline-offset: 2px;
 }
 
@@ -168,21 +215,21 @@ svg.lucide {
 
 /* Primary — purple fill, one per view */
 .btn-primary {
-  background: var(--royal);
-  border-color: var(--royal);
-  color: var(--on-royal);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
 }
 
 .btn-primary:hover {
   background: var(--ink);
   border-color: var(--ink);
-  color: var(--royal);
+  color: var(--accent-on-invert);
 }
 
 .btn-primary:active {
   background: var(--pressed);
-  border-color: var(--royal);
-  color: var(--royal);
+  border-color: var(--accent-on-invert);
+  color: var(--accent-on-invert);
 }
 
 /* Secondary — ink frame */
@@ -217,7 +264,7 @@ svg.lucide {
 .btn-secondary:active,
 .btn-ghost:active {
   background: var(--pressed);
-  border-color: var(--royal);
+  border-color: var(--accent-on-invert);
   color: var(--ground);
 }
 
@@ -269,7 +316,7 @@ svg.lucide {
 
 .icon-btn:active {
   background: var(--pressed);
-  border-color: var(--royal);
+  border-color: var(--accent-on-invert);
   color: var(--ground);
 }
 
@@ -278,7 +325,7 @@ svg.lucide {
   cursor: not-allowed;
   background: transparent;
   border-color: var(--disabled-rule);
-  color: #4A4A4A;
+  color: var(--disabled-ink);
 }
 
 .icon-btn-bare:disabled,
@@ -311,7 +358,7 @@ svg.lucide {
 }
 
 .field:focus {
-  border-color: var(--royal-300);
+  border-color: var(--accent-line);
 }
 
 /* Keycap */
@@ -382,7 +429,7 @@ svg.lucide {
 .menu-item:active {
   background: var(--pressed);
   color: var(--ground);
-  box-shadow: inset 0 0 0 2px var(--royal);
+  box-shadow: inset 0 0 0 2px var(--accent-on-invert);
 }
 
 .menu-item.is-disabled,
@@ -430,7 +477,7 @@ svg.lucide {
 
 .menu-item:hover .menu-item-shortcut,
 .menu-item.is-highlighted .menu-item-shortcut {
-  color: #4A4A4A;
+  color: var(--muted-on-invert);
 }
 
 .menu-item.is-disabled .menu-item-shortcut {
@@ -456,16 +503,38 @@ svg.lucide {
 }
 
 .menu-check.is-on {
-  background: var(--royal-300);
-  border-color: var(--royal-300);
+  background: var(--accent-line);
+  border-color: var(--accent-line);
 }
 
 .menu-item:hover .menu-check.is-on,
 .menu-item.is-highlighted .menu-check.is-on {
-  background: var(--royal);
-  border-color: var(--royal);
+  background: var(--accent-on-invert);
+  border-color: var(--accent-on-invert);
 }
 
 .menu-item:hover .menu-check:not(.is-on) {
-  border-color: #4A4A4A;
+  border-color: var(--muted-on-invert);
+}
+
+/* Color swatch (Themes → Accent). Chosen: an ink ring around the square. */
+.menu-swatch {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.35);
+}
+
+.menu-swatch.is-empty {
+  background: repeating-linear-gradient(-45deg, var(--rule-strong) 0 2px, transparent 2px 5px);
+}
+
+.menu-swatch.is-on {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.menu-item:hover .menu-swatch.is-on,
+.menu-item.is-highlighted .menu-swatch.is-on {
+  outline-color: var(--ground);
 }

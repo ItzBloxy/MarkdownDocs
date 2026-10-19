@@ -1,4 +1,4 @@
-/* Context menu + quick-correct — both build on the .menu primitive (index.css) */
+/* Context menu — builds on the .menu primitive (index.css) */
 
 .context-menu {
   position: fixed;
@@ -7,26 +7,13 @@
   max-width: 300px;
 }
 
-.quick-correct {
-  position: fixed;
-  z-index: 10001;
-  min-width: 200px;
-  max-width: 260px;
-}
-
-.quick-correct .menu-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 /* Chosen state inside menus (e.g. bold is on, current code language) */
 .menu-item.is-active .menu-item-icon {
-  color: var(--royal-300);
+  color: var(--accent-line);
 }
 
 .menu-item.is-active:hover .menu-item-icon {
-  color: var(--royal);
+  color: var(--accent-on-invert);
 }
 
 .menu-item-chevron {

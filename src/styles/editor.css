@@ -10,8 +10,8 @@
   font-size: 17px;
   font-weight: 400;
   line-height: 1.65;
-  color: var(--pressed);
-  caret-color: var(--royal-300);
+  color: var(--ink-body);
+  caret-color: var(--accent-line);
   min-height: 400px;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -185,7 +185,7 @@
 }
 
 .tiptap hr.ProseMirror-selectednode {
-  border-top-color: var(--royal-300);
+  border-top-color: var(--accent-line);
 }
 
 /* Links — ink text, faint underline that turns Royal 300 on hover */
@@ -200,7 +200,7 @@
 }
 
 .tiptap a:hover {
-  text-decoration-color: var(--royal-300);
+  text-decoration-color: var(--accent-line);
   text-decoration-thickness: 2px;
 }
 
@@ -237,7 +237,7 @@
 
 /* Gap cursor */
 .tiptap .ProseMirror-gapcursor::after {
-  border-top-color: var(--royal-300);
+  border-top-color: var(--accent-line);
 }
 
 /* Images — inline like markdown, so badges sit in a row; never wider than
@@ -256,7 +256,7 @@
 }
 
 .tiptap .image-node.ProseMirror-selectednode {
-  outline: 2px solid var(--royal-300);
+  outline: 2px solid var(--accent-line);
   outline-offset: 2px;
 }
 

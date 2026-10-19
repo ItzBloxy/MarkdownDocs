@@ -7,6 +7,17 @@
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#0B0B0B" />
     <title>MarkdownDocs</title>
+    <script>
+      // Apply the saved theme before first paint (written by src/context/ThemeContext.tsx)
+      try {
+        var t = JSON.parse(localStorage.getItem('markdowndocs.theme') || 'null')
+        if (t) {
+          var light = t.mode === 'light' || (t.mode === 'system' && matchMedia('(prefers-color-scheme: light)').matches)
+          document.documentElement.dataset.theme = light ? 'light' : 'dark'
+          for (var k in t.vars || {}) document.documentElement.style.setProperty(k, t.vars[k])
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

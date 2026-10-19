@@ -5,8 +5,12 @@ export interface MenuItem {
   shortcut?: string
   disabled?: boolean
   separator?: boolean
+  /** A mono section label rather than a clickable row. */
+  header?: boolean
   /** Renders a choice marker; true when this option is the current one. */
   checked?: boolean
+  /** A color swatch in place of the choice marker; '' draws an empty swatch. */
+  swatch?: string
   action?: () => void
 }
 
@@ -43,7 +47,17 @@ export function MenuDropdown({ items, onClose }: MenuDropdownProps) {
         if (item.separator) {
           return <div key={`sep-${i}`} className="menu-sep" role="separator" />
         }
+        if (item.header) {
+          return <span key={`head-${i}`} className="meta menu-label" role="presentation">{item.label}</span>
+        }
         const isChoice = item.checked !== undefined
+        const marker = item.swatch !== undefined
+          ? <span
+              className={`menu-swatch ${item.checked ? 'is-on' : ''} ${item.swatch ? '' : 'is-empty'}`}
+              style={item.swatch ? { background: item.swatch } : undefined}
+              aria-hidden="true"
+            />
+          : isChoice && <span className={`menu-check ${item.checked ? 'is-on' : ''}`} aria-hidden="true" />
         return (
           <button
             key={item.label}
@@ -58,7 +72,7 @@ export function MenuDropdown({ items, onClose }: MenuDropdownProps) {
               onClose()
             }}
           >
-            {isChoice && <span className={`menu-check ${item.checked ? 'is-on' : ''}`} aria-hidden="true" />}
+            {marker}
             <span className="menu-item-label">{item.label}</span>
             {item.shortcut && (
               <span className="menu-item-shortcut">{item.shortcut}</span>

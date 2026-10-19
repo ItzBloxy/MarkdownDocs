@@ -32,14 +32,17 @@ The same React bundle serves both; `useFileSystem` picks the mode at runtime via
 
 ```
 App
-└── DesktopGate           # Blocks viewports narrower than 1024px (nothing else)
-    └── DocumentProvider  # Context: docName, isDirty, isFavorite, previewMode
-        └── EditorApp     # src/App.tsx — the actual editor shell
+└── ThemeProvider             # Context: theme mode + accent (Themes menu)
+    └── DesktopGate           # Blocks viewports narrower than 1024px (nothing else)
+        └── DocumentProvider  # Context: docName, isDirty, isFavorite, previewMode
+            └── EditorApp     # src/App.tsx — the actual editor shell
 ```
 
-`EditorApp` (in `src/App.tsx`) wires together the editor (`useEditorSetup`), stats (`useEditorStats`), file I/O (`useFileSystem`), spellcheck (`useSpellcheck`), and the right-click menu (`useContextMenu`), then composes `TitleMenuBar`, `Toolbar`, `EditorCanvas` + `EditorPage` (the page-shaped editor surface), `StatusBar`, and various overlays (`FindReplaceBar`, `LinkPopover`, `SlashCommandPalette`, `KeyboardShortcutsModal`, `ContextMenu`, `QuickCorrect`, `ConflictBar`, `ToastContainer`).
+`EditorApp` (in `src/App.tsx`) wires together the editor (`useEditorSetup`), stats (`useEditorStats`), file I/O (`useFileSystem`), and the right-click menu (`useContextMenu`), then composes `TitleMenuBar`, `Toolbar`, `EditorCanvas` + `EditorPage` (the page-shaped editor surface), `StatusBar`, and various overlays (`FindReplaceBar`, `LinkPopover`, `SlashCommandPalette`, `KeyboardShortcutsModal`, `ContextMenu`, `ConflictBar`, `ToastContainer`).
 
-State is React hooks + a single `DocumentContext`. No Redux/Zustand/etc.
+State is React hooks + `DocumentContext` and `ThemeContext`. No Redux/Zustand/etc.
+
+There is no spellchecker: it was removed (the custom typo-js one was too slow on large files). The editor keeps the browser's native `spellcheck="false"`.
 
 ### The editor: Tiptap extensions
 
@@ -84,11 +87,11 @@ Three runtime modes, chosen once at module load: **Tauri** (`isTauri()`), **File
 - In both modes: if the file changed on disk *and* the editor has unsaved changes, `ConflictBar` is shown with reload/keep options. Don't bypass this.
 - `beforeunload` is wired in `App.tsx` to warn on close when `isDirty`.
 
-### Spellcheck (`src/hooks/useSpellcheck.ts`)
+### Themes (`src/context/ThemeContext.tsx`, `src/utils/accent.ts`)
 
-Uses **typo-js** with a Hunspell-style dictionary; runs as a **ProseMirror plugin** registered/unregistered dynamically by `App.tsx` (look for `editor.registerPlugin` / `unregisterPlugin('spellcheck$')`). Misspellings get a `.misspelled` class; clicking one opens `QuickCorrect`. The plugin includes per-word ignore and "add to dictionary" lists. Language is selectable from `TitleMenuBar`.
+The **Themes** menu in `TitleMenuBar` sets a mode (Dark, Light, Match system) and an accent (8 presets or any custom color via a native `<input type="color">`). `ThemeProvider` puts `data-theme="light|dark"` on `<html>` and sets four inline CSS variables from the accent: `--accent` (fills), `--on-accent` (black or white text on fills), `--accent-tint` (lighter) and `--accent-shade` (darker); `accent.ts` walks tint/shade lightness until each holds 4.5:1 on the dark/light ground. `index.css` then maps per mode: `--accent-line` (accent as a line or mark on the ground) and `--accent-on-invert` (accent on a hovered/pressed, i.e. inverted, surface). In CSS, use `--accent` for fills, `--accent-line` for outlines/bars/markers, and `--accent-on-invert` inside `:hover`/`:active` rules that invert to `--ink`. Never hard-code a color: light mode overrides every neutral token under `:root[data-theme='light']`.
 
-If you change the spellcheck plugin's key or signature, also update the registration check in `App.tsx` (`p.spec.key?.key === 'spellcheck$'`) and the unregister call.
+The choice persists in `localStorage` (`markdowndocs.theme`: `{ mode, accent, vars }`); an inline script in `index.html` applies it before first paint, so keep that script and the stored shape in sync. `useTheme()` lives in `src/context/theme.ts`.
 
 ## Things to know
 
@@ -96,8 +99,8 @@ If you change the spellcheck plugin's key or signature, also update the registra
 - **`src-tauri/`** holds the desktop shell: `main.rs` delegates to `lib.rs`, which registers the fs/dialog/log plugins and the single `get_initial_file_path` command. `tauri.conf.json` sets `devUrl` to port 5173 — which is why `vite.config.ts` uses `strictPort` (it honors a `PORT` env override for tooling but defaults to 5173).
 - **`package.json` `name` is `"temp-scaffold"`** — leftover from the initial `create-vite` scaffold. Don't "fix" it without checking with the user; it's not consumed anywhere meaningful.
 - **`handlePaste: false`** is set on the Tiptap editor and a custom `clipboardTextParser` splits on newlines into paragraphs. Pasted/dropped image *files* are handled separately by the `imageFiles` plugin in `extensions/Image.ts` (it defers to the normal HTML paste when the clipboard also has a web `<img>`). If you touch paste behavior, search for these.
-- **CSS is split** into modular files imported from `App.tsx` (`chrome.css`, `overlays.css`, `editor.css`, `table.css`, `find-replace.css`, `context-menu.css`, `print.css`, `spellcheck.css`). There's no CSS-in-JS or PostCSS pipeline beyond what Vite does by default.
-- **Visual design is "Raster"** (reference kit in `docs/style-reference/`). `src/index.css` holds the tokens (`--ground`, `--surface`, `--rule`, `--muted`, `--ink`, `--royal`, `--royal-300`…) and shared primitives: `.btn` (`-primary`/`-secondary`/`-ghost`), `.icon-btn`, `.field`, `.kbd`, `.meta`, and `.menu`/`.menu-item` used by every dropdown, context menu and palette. Rules: 0 radius everywhere; hover inverts fill and ink; press rings in `--royal`; focus is a `--royal-300` outline; floating surfaces lift on `--raised` + `--shadow-float` (no outlines); fonts are Schibsted Grotesk (UI and document) + JetBrains Mono (meta). Prefer these classes over inline styles. Tooltips are CSS-only: add `has-tip` + `data-tip="…"`.
+- **CSS is split** into modular files imported from `App.tsx` (`chrome.css`, `overlays.css`, `editor.css`, `table.css`, `find-replace.css`, `context-menu.css`, `print.css`). There's no CSS-in-JS or PostCSS pipeline beyond what Vite does by default.
+- **Visual design is "Raster"** (reference kit in `docs/style-reference/`). `src/index.css` holds the tokens (`--ground`, `--surface`, `--rule`, `--muted`, `--ink`, `--accent`, `--accent-line`… — see Themes above) and shared primitives: `.btn` (`-primary`/`-secondary`/`-ghost`), `.icon-btn`, `.field`, `.kbd`, `.meta`, and `.menu`/`.menu-item` (with `MenuItem.header`/`swatch`/`checked` in `MenuDropdown`) used by every dropdown, context menu and palette. Rules: 0 radius everywhere; hover inverts fill and ink; press rings in `--accent-on-invert`; focus is an `--accent-line` outline; floating surfaces lift on `--raised` + `--shadow-float` (no outlines); fonts are Schibsted Grotesk (UI and document) + JetBrains Mono (meta). Prefer these classes over inline styles. Tooltips are CSS-only: add `has-tip` + `data-tip="…"`.
 - **Fonts are bundled, not fetched**: `@fontsource-variable/schibsted-grotesk` and `@fontsource/jetbrains-mono` are imported in `src/main.tsx` so the desktop app keeps its type offline. The variable package's family name is `Schibsted Grotesk Variable` (first in `--font-ui`). Don't add Google Fonts links back to `index.html`.
 - **App icons** come from `public/favicon.svg`: `app-icon.png` (repo root, 1024px render of that SVG) is the input for `npx tauri icon`, which rewrites `src-tauri/icons/`. It also emits `android/`, `ios/` and `64x64.png`; this app is desktop-only, so delete those.
 - **`.claude/launch.json`** points to dev server port 5173 with `autoPort` enabled — if 5173 is taken (e.g. another project's dev server), the Claude Preview tools assign a free port via the `PORT` env var, which `vite.config.ts` honors.

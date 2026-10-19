@@ -64,11 +64,11 @@
 }
 
 .fav-btn.is-on {
-  color: var(--royal-300);
+  color: var(--accent-line);
 }
 
 .fav-btn.is-on:hover {
-  color: var(--royal);
+  color: var(--accent-on-invert);
 }
 
 /* Menu bar — nav links: muted at rest, ink on hover, a Royal 300 bar when open */
@@ -108,7 +108,7 @@
 
 .menubar-trigger.is-open {
   color: var(--ink);
-  border-bottom-color: var(--royal-300);
+  border-bottom-color: var(--accent-line);
 }
 
 .menubar-trigger:disabled {
@@ -121,6 +121,20 @@
   top: 100%;
   left: 0;
   z-index: 100;
+}
+
+/* Native color input behind Themes → Custom color. Invisible, but sits under
+   the trigger so the system picker opens next to the menu. */
+.theme-color-input {
+  position: absolute;
+  left: 12px;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .title-bar-actions {
@@ -167,24 +181,24 @@
 .tb-btn:active {
   background: var(--pressed);
   color: var(--ground);
-  box-shadow: inset 0 0 0 2px var(--royal);
+  box-shadow: inset 0 0 0 2px var(--accent-on-invert);
 }
 
 /* On — ink glyph over a Royal 300 bar, like a selected tab */
 .tb-btn.is-active {
   color: var(--ink);
-  box-shadow: inset 0 -3px 0 var(--royal-300);
+  box-shadow: inset 0 -3px 0 var(--accent-line);
 }
 
 .tb-btn.is-active:hover {
   color: var(--ground);
-  box-shadow: inset 0 -3px 0 var(--royal);
+  box-shadow: inset 0 -3px 0 var(--accent-on-invert);
 }
 
 .tb-btn:disabled,
 .tb-btn:disabled:hover {
   background: transparent;
-  color: #4A4A4A;
+  color: var(--disabled-ink);
   box-shadow: none;
   cursor: default;
 }
@@ -236,7 +250,7 @@
 
 .style-select:active {
   background: var(--pressed);
-  border-color: var(--royal);
+  border-color: var(--accent-on-invert);
   color: var(--ground);
 }
 
@@ -382,8 +396,8 @@
 }
 
 .status-square.is-on {
-  background: var(--royal-300);
-  border-color: var(--royal-300);
+  background: var(--accent-line);
+  border-color: var(--accent-line);
 }
 
 .status-btn {
@@ -400,7 +414,7 @@
   overflow: auto;
   padding: 48px 24px 96px;
   background-color: var(--ground);
-  background-image: linear-gradient(to bottom, transparent 31px, #151515 31px);
+  background-image: linear-gradient(to bottom, transparent 31px, var(--canvas-line) 31px);
   background-size: 100% 32px;
   background-attachment: local;
 }
@@ -444,7 +458,7 @@
 
 .page-resize-handle:hover::after,
 .page-resize-handle:active::after {
-  background: var(--royal-300);
+  background: var(--accent-line);
 }
 
 /* ---------- Conflict banner (kit warning: hatched block, ink frame) ---------- */

@@ -16,7 +16,7 @@
   font-family: var(--font-ui);
   font-size: 15px;
   line-height: 1.55;
-  color: var(--pressed);
+  color: var(--ink-body);
   background: transparent;
 }
 
@@ -35,12 +35,12 @@
 }
 
 .tiptap tr:hover td {
-  background: #181818;
+  background: var(--row-hover);
 }
 
 /* Selected cell */
 .tiptap .selectedCell {
-  outline: 2px solid var(--royal-300);
+  outline: 2px solid var(--accent-line);
   outline-offset: -2px;
 }
 
@@ -48,7 +48,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(185, 104, 243, 0.08);
+  background: color-mix(in srgb, var(--accent-line) 10%, transparent);
   pointer-events: none;
 }
 
@@ -59,7 +59,7 @@
   bottom: -1px;
   right: -2px;
   width: 3px;
-  background: var(--royal-300);
+  background: var(--accent-line);
   pointer-events: none;
 }
 
@@ -90,9 +90,9 @@
   justify-content: center;
   width: 20px;
   height: 20px;
-  border: 2px solid var(--royal);
-  background: var(--royal);
-  color: var(--on-royal);
+  border: 2px solid var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
@@ -121,7 +121,7 @@
 .table-add-row:hover {
   background: var(--ink);
   border-color: var(--ink);
-  color: var(--royal);
+  color: var(--accent-on-invert);
 }
 
 /* Table floating toolbar */
@@ -155,7 +155,7 @@
 
 .table-toolbar button.danger:hover {
   background: var(--ink);
-  color: var(--royal);
+  color: var(--accent-on-invert);
 }
 
 .table-toolbar .sep {

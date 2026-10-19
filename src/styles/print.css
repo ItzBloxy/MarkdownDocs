@@ -6,7 +6,6 @@
   .status-bar,
   .menu,
   .context-menu,
-  .quick-correct,
   .slash-palette,
   .link-popover,
   .image-popover,
@@ -87,10 +86,6 @@
     background: #ddd !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-  }
-
-  .misspelled {
-    text-decoration: none !important;
   }
 
   .search-match,

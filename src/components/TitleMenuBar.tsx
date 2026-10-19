@@ -5,6 +5,8 @@ import { MenuDropdown, type MenuItem } from './MenuDropdown'
 import { showToast } from './Toast'
 import { editorToMarkdown } from '../utils/markdownExport'
 import { openImagePopover } from '../utils/imagePopover'
+import { ACCENT_PRESETS } from '../utils/accent'
+import { useTheme } from '../context/theme'
 
 interface FileSystemActions {
   openFile: () => void
@@ -18,22 +20,21 @@ interface FileSystemActions {
   fileState: { isLinked: boolean }
 }
 
-type SpellcheckLanguage = 'en_US' | 'da_DK' | 'none'
-
 interface TitleMenuBarProps {
   editor: Editor | null
   onOpenShortcuts: () => void
   onLinkClick?: () => void
   onOpenFind?: () => void
   fileSystem?: FileSystemActions
-  spellcheckLanguage?: SpellcheckLanguage
-  onSetLanguage?: (lang: SpellcheckLanguage) => void
 }
 
 const SEP: MenuItem = { label: '', separator: true }
 
-export function TitleMenuBar({ editor, onOpenShortcuts, onLinkClick, onOpenFind, fileSystem: fs, spellcheckLanguage, onSetLanguage }: TitleMenuBarProps) {
+export function TitleMenuBar({ editor, onOpenShortcuts, onLinkClick, onOpenFind, fileSystem: fs }: TitleMenuBarProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null)
+  const { mode, accent, setMode, setAccent } = useTheme()
+  // Held in state (callback ref) so the menu action can reach it without reading a ref during render
+  const [colorInput, setColorInput] = useState<HTMLInputElement | null>(null)
   const barRef = useRef<HTMLDivElement>(null)
 
   const close = useCallback(() => setOpenMenu(null), [])
@@ -99,10 +100,27 @@ export function TitleMenuBar({ editor, onOpenShortcuts, onLinkClick, onOpenFind,
     { label: 'Spoiler', action: () => editor?.chain().focus().toggleMark('spoiler').run() },
   ]
 
-  const languageItems: MenuItem[] = [
-    { label: 'English (US)', checked: spellcheckLanguage === 'en_US', action: () => onSetLanguage?.('en_US') },
-    { label: 'Dansk (DA)', checked: spellcheckLanguage === 'da_DK', action: () => onSetLanguage?.('da_DK') },
-    { label: 'No spellcheck', checked: spellcheckLanguage === 'none', action: () => onSetLanguage?.('none') },
+  const isPresetAccent = ACCENT_PRESETS.some(p => p.hex === accent)
+  const openColorPicker = () => {
+    if (!colorInput) return
+    try { colorInput.showPicker() } catch { colorInput.click() }
+  }
+
+  const themeItems: MenuItem[] = [
+    { label: 'Mode', header: true },
+    { label: 'Dark', checked: mode === 'dark', action: () => setMode('dark') },
+    { label: 'Light', checked: mode === 'light', action: () => setMode('light') },
+    { label: 'Match system', checked: mode === 'system', action: () => setMode('system') },
+    SEP,
+    { label: 'Accent', header: true },
+    ...ACCENT_PRESETS.map(p => ({ label: p.name, swatch: p.hex, checked: accent === p.hex, action: () => setAccent(p.hex) })),
+    {
+      label: 'Custom color...',
+      swatch: isPresetAccent ? '' : accent,
+      checked: !isPresetAccent,
+      shortcut: isPresetAccent ? undefined : accent,
+      action: openColorPicker,
+    },
   ]
 
   const helpItems: MenuItem[] = [
@@ -114,7 +132,7 @@ export function TitleMenuBar({ editor, onOpenShortcuts, onLinkClick, onOpenFind,
     { label: 'Edit', items: editItems },
     { label: 'Insert', items: insertItems },
     { label: 'Format', items: formatItems },
-    { label: 'Language', items: languageItems },
+    { label: 'Themes', items: themeItems },
     { label: 'Help', items: helpItems },
   ]
 
@@ -148,6 +166,18 @@ export function TitleMenuBar({ editor, onOpenShortcuts, onLinkClick, onOpenFind,
             </button>
             {openMenu === menu.label && (
               <MenuDropdown items={menu.items} onClose={close} />
+            )}
+            {menu.label === 'Themes' && (
+              // Outlives the menu so the native picker stays open; updates live while dragging
+              <input
+                ref={setColorInput}
+                type="color"
+                className="theme-color-input"
+                value={accent}
+                onChange={e => setAccent(e.target.value)}
+                tabIndex={-1}
+                aria-label="Custom accent color"
+              />
             )}
           </div>
         ))}

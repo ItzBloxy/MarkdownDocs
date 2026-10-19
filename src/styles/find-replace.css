@@ -51,7 +51,7 @@
 }
 
 .search-match-current {
-  background: var(--royal);
-  color: var(--on-royal);
-  box-shadow: 0 0 0 2px var(--royal);
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 0 0 2px var(--accent);
 }

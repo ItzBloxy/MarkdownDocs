@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { EditorContent } from '@tiptap/react'
 import { DocumentProvider, useDocument } from './context/DocumentContext'
+import { ThemeProvider } from './context/ThemeContext'
 import { TitleMenuBar } from './components/TitleMenuBar'
 import { Toolbar } from './components/Toolbar'
 import { FindReplaceBar } from './components/FindReplaceBar'
@@ -14,12 +15,10 @@ import { SlashCommandPalette } from './components/SlashCommandPalette'
 import { ConflictBar } from './components/ConflictBar'
 import { DesktopGate } from './components/DesktopGate'
 import { ContextMenu } from './components/ContextMenu'
-import { QuickCorrect } from './components/QuickCorrect'
 import { useEditorSetup } from './hooks/useEditorSetup'
 import { useEditorStats } from './hooks/useEditorStats'
 import { useFileSystem } from './hooks/useFileSystem'
 import { useContextMenu } from './hooks/useContextMenu'
-import { useSpellcheck } from './hooks/useSpellcheck'
 import './styles/chrome.css'
 import './styles/overlays.css'
 import './styles/editor.css'
@@ -27,16 +26,12 @@ import './styles/table.css'
 import './styles/find-replace.css'
 import './styles/context-menu.css'
 import './styles/print.css'
-import './styles/spellcheck.css'
 
 function EditorApp() {
   const { isDirty, markDirty, markSaved, setDocName } = useDocument()
   const [showShortcuts, setShowShortcuts] = useState(false)
   const [showLinkPopover, setShowLinkPopover] = useState(false)
   const [showFind, setShowFind] = useState(false)
-  const [quickCorrect, setQuickCorrect] = useState<{
-    x: number; y: number; word: string; from: number; to: number; suggestions: string[]
-  } | null>(null)
 
   const onUpdate = useCallback(() => {
     markDirty()
@@ -46,51 +41,6 @@ function EditorApp() {
   const stats = useEditorStats(editor)
   const fs = useFileSystem(editor, isDirty, markSaved, setDocName)
   const { menu: ctxMenu, close: closeCtx } = useContextMenu()
-  const spellcheck = useSpellcheck(editor)
-
-  // Register spellcheck plugin
-  useEffect(() => {
-    if (!editor) return
-    const plugin = spellcheck.spellcheckPlugin()
-    // Check if already registered
-    const existing = editor.state.plugins.find(p => p.spec.key?.key === 'spellcheck$')
-    if (!existing) {
-      editor.registerPlugin(plugin)
-    }
-    return () => {
-      try { editor.unregisterPlugin('spellcheck$') } catch { /* may not exist */ }
-    }
-  }, [editor, spellcheck.spellcheckPlugin])
-
-  // Click handler for misspelled words → open QuickCorrect
-  useEffect(() => {
-    if (!editor) return
-    const handler = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      if (!target.closest('.misspelled')) {
-        return // Not a misspelled word — don't intercept
-      }
-      const pos = editor.view.posAtCoords({ left: e.clientX, top: e.clientY })
-      if (!pos) return
-      const misspelled = spellcheck.getMisspelledAt(pos.pos)
-      if (!misspelled) return
-
-      const suggestions = spellcheck.getSuggestions(misspelled.word)
-      if (suggestions.length === 0) return // No suggestions — don't show popup
-      const coords = editor.view.coordsAtPos(misspelled.to)
-      setQuickCorrect({
-        x: coords.left,
-        y: coords.bottom + 4,
-        word: misspelled.word,
-        from: misspelled.from,
-        to: misspelled.to,
-        suggestions,
-      })
-    }
-    const editorDom = editor.view.dom
-    editorDom.addEventListener('click', handler)
-    return () => editorDom.removeEventListener('click', handler)
-  }, [editor, spellcheck])
 
   // Notify file watcher about typing
   useEffect(() => {
@@ -184,8 +134,6 @@ function EditorApp() {
         onLinkClick={handleLinkClick}
         onOpenFind={handleOpenFind}
         fileSystem={fs}
-        spellcheckLanguage={spellcheck.language}
-        onSetLanguage={spellcheck.setLanguage}
       />
       <Toolbar editor={editor} onLinkClick={handleLinkClick} />
       {showFind && (
@@ -223,24 +171,8 @@ function EditorApp() {
           context={ctxMenu.context}
           targetEl={ctxMenu.targetEl}
           editor={editor}
-          spellcheck={spellcheck}
           onClose={closeCtx}
           onRequestLink={handleLinkClick}
-        />
-      )}
-      {quickCorrect && (
-        <QuickCorrect
-          x={quickCorrect.x}
-          y={quickCorrect.y}
-          word={quickCorrect.word}
-          suggestions={quickCorrect.suggestions}
-          onSelect={(replacement) => {
-            spellcheck.replaceWord(quickCorrect.from, quickCorrect.to, replacement)
-            setQuickCorrect(null)
-          }}
-          onAddToDictionary={() => spellcheck.addToDictionary(quickCorrect.word)}
-          onIgnore={() => spellcheck.ignoreAll(quickCorrect.word)}
-          onClose={() => setQuickCorrect(null)}
         />
       )}
       <SlashCommandPalette editor={editor} />
@@ -251,10 +183,12 @@ function EditorApp() {
 
 export default function App() {
   return (
-    <DesktopGate>
-      <DocumentProvider>
-        <EditorApp />
-      </DocumentProvider>
-    </DesktopGate>
+    <ThemeProvider>
+      <DesktopGate>
+        <DocumentProvider>
+          <EditorApp />
+        </DocumentProvider>
+      </DesktopGate>
+    </ThemeProvider>
   )
 }
