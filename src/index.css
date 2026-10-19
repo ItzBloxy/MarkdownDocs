@@ -26,7 +26,7 @@
   --disabled-rule: #262626;
 
   /* Type */
-  --font-ui: 'Schibsted Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-ui: 'Schibsted Grotesk Variable', 'Schibsted Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
   /* Floating surfaces lift on fill + a hard offset shadow, never an outline */
