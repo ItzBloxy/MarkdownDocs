@@ -163,7 +163,7 @@ npm install
 - **App:** React 19 and TypeScript, bundled with Vite.
 - **Desktop:** [Tauri 2](https://tauri.app), which uses the system WebView for a small download.
 - **Markdown:** a purpose-built importer and exporter (`src/utils/markdownImport.ts`, `markdownExport.ts`) that round-trips files without reflowing them.
-- **Design:** "Raster", a strict-grid design system with zero-radius controls, hairline rules and a single accent color. Its reference kit lives in [`docs/style-reference`](docs/style-reference).
+- **Design:** "Raster", a strict-grid design system with zero-radius controls, hairline rules and a single accent color. Its tokens and shared controls live in [`src/index.css`](src/index.css).
 
 New to the codebase? [`CLAUDE.md`](CLAUDE.md) walks through the architecture, the file I/O modes and the theming tokens.
 

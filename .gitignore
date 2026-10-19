@@ -32,3 +32,6 @@ src-tauri/target/
 
 # Staged release assets (uploaded to GitHub Releases, not committed)
 release/
+
+# Design reference kit: kept locally, not published
+docs/style-reference/
