@@ -29,3 +29,6 @@ src-tauri/target/
 # Claude Code / Superpowers local state
 .claude/settings.local.json
 .superpowers/
+
+# Staged release assets (uploaded to GitHub Releases, not committed)
+release/

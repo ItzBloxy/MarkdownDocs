@@ -28,6 +28,12 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "publisher": "ItzBloxy",
+    "copyright": "Copyright © 2026 ItzBloxy",
+    "category": "Productivity",
+    "shortDescription": "A desktop editor for Markdown files",
+    "longDescription": "MarkdownDocs edits Markdown files like documents and saves them back as clean Markdown.",
+    "homepage": "https://github.com/ItzBloxy/MarkdownDocs",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
