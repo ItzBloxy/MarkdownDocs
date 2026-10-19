@@ -1,19 +1,12 @@
-/* Misspelled word — straight purple underline with glow */
+/* Misspelled word — a dotted Royal 300 underline: square dots, no glow */
 .misspelled {
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 3px;
-  text-decoration-style: solid;
-  text-shadow: 0 1px 4px rgba(160, 122, 255, 0.3);
+  text-decoration: underline dotted var(--royal-300);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  cursor: pointer;
 }
 
-/* Suggestion items in context menu */
-.ctx-item.suggestion {
-  font-weight: 600;
-  color: var(--accent-hover);
-}
-
-.ctx-item.suggestion:hover {
-  background: rgba(160, 122, 255, 0.15);
+/* Spelling suggestions in the context menu read heavier than commands */
+.menu-item.suggestion .menu-item-label {
+  font-weight: 700;
 }
