@@ -1,11 +1,11 @@
-/* Find & Replace bar */
+/* Find & Replace bar — a strip under the toolbar */
 .find-replace-bar {
-  background: var(--bg-surface-alt);
-  border-bottom: 1px solid var(--border-primary);
-  padding: 6px 20px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
   flex-shrink: 0;
 }
 
@@ -13,99 +13,45 @@
 .replace-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+}
+
+.find-label {
+  width: 64px;
+  flex-shrink: 0;
 }
 
 .find-input {
-  flex: 1;
-  max-width: 300px;
-  padding: 5px 10px;
-  background: var(--bg-input);
-  border: 1px solid var(--border-primary);
-  border-radius: 4px;
-  color: var(--text-primary);
-  font-size: 13px;
-  font-family: var(--font-ui);
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.find-input:focus {
-  border-color: var(--accent);
+  width: 320px;
 }
 
 .find-count {
+  min-width: 96px;
+  padding: 0 4px;
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--text-muted);
-  font-family: var(--font-ui);
-  min-width: 70px;
-  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
 
-.find-nav-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border: none;
-  background: none;
-  border-radius: 4px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.12s ease;
+.find-count.has-results {
+  color: var(--ink);
 }
 
-.find-nav-btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+.find-spacer {
+  flex: 1;
 }
 
-.find-nav-btn:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.find-nav-btn:disabled:hover {
-  background: none;
-}
-
-.find-nav-btn.active {
-  background: var(--accent-bg-strong);
-  color: var(--accent);
-}
-
-.replace-btn {
-  padding: 4px 10px;
-  border: none;
-  border-radius: 4px;
-  background: var(--bg-hover);
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-family: var(--font-ui);
-  cursor: pointer;
-  transition: all 0.12s ease;
-}
-
-.replace-btn:hover {
-  background: var(--bg-active);
-  color: var(--text-primary);
-}
-
-.replace-btn:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-/* Search match highlights */
+/* Search match highlights: every match on a dim block, the current one in Royal */
 .search-match {
-  background: rgba(160, 122, 255, 0.15);
-  border-radius: 2px;
+  background: var(--rule-strong);
+  color: var(--ink);
 }
 
 .search-match-current {
-  background: rgba(160, 122, 255, 0.4);
-  box-shadow: 0 0 0 1px var(--accent);
-  border-radius: 2px;
+  background: var(--royal);
+  color: var(--on-royal);
+  box-shadow: 0 0 0 2px var(--royal);
 }

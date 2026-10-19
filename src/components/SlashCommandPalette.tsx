@@ -17,52 +17,52 @@ interface SlashCommand {
 
 const commands: SlashCommand[] = [
   {
-    label: 'Text', description: 'Plain paragraph', icon: <Pilcrow size={18} />,
+    label: 'Text', description: 'Plain paragraph', icon: <Pilcrow size={16} />,
     aliases: ['text', 'paragraph', 'p'],
     action: (e) => e.chain().focus().setParagraph().run(),
   },
   {
-    label: 'Heading 1', description: 'Large heading', icon: <Heading1 size={18} />,
+    label: 'Heading 1', description: 'Large heading', icon: <Heading1 size={16} />,
     aliases: ['h1', 'heading1', 'heading 1'],
     action: (e) => e.chain().focus().toggleHeading({ level: 1 }).run(),
   },
   {
-    label: 'Heading 2', description: 'Medium heading', icon: <Heading2 size={18} />,
+    label: 'Heading 2', description: 'Medium heading', icon: <Heading2 size={16} />,
     aliases: ['h2', 'heading2', 'heading 2'],
     action: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
   },
   {
-    label: 'Heading 3', description: 'Small heading', icon: <Heading3 size={18} />,
+    label: 'Heading 3', description: 'Small heading', icon: <Heading3 size={16} />,
     aliases: ['h3', 'heading3', 'heading 3'],
     action: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
   },
   {
-    label: 'Bullet List', description: 'Unordered list item', icon: <List size={18} />,
+    label: 'Bullet List', description: 'Unordered list item', icon: <List size={16} />,
     aliases: ['bullet', 'list', 'ul'],
     action: (e) => e.chain().focus().toggleBulletList().run(),
   },
   {
-    label: 'Numbered List', description: 'Ordered list item', icon: <ListOrdered size={18} />,
+    label: 'Numbered List', description: 'Ordered list item', icon: <ListOrdered size={16} />,
     aliases: ['numbered', 'ordered', 'ol'],
     action: (e) => e.chain().focus().toggleOrderedList().run(),
   },
   {
-    label: 'Quote', description: 'Blockquote', icon: <Quote size={18} />,
+    label: 'Quote', description: 'Blockquote', icon: <Quote size={16} />,
     aliases: ['quote', 'blockquote'],
     action: (e) => e.chain().focus().toggleBlockquote().run(),
   },
   {
-    label: 'Code Block', description: 'Fenced code block', icon: <Braces size={18} />,
+    label: 'Code Block', description: 'Fenced code block', icon: <Braces size={16} />,
     aliases: ['code', 'codeblock', 'block'],
     action: (e) => e.chain().focus().toggleCodeBlock().run(),
   },
   {
-    label: 'Table', description: 'Insert a table', icon: <Table2 size={18} />,
+    label: 'Table', description: 'Insert a table', icon: <Table2 size={16} />,
     aliases: ['table'],
     action: (e) => e.chain().focus().insertTable({ rows: 2, cols: 3, withHeaderRow: true }).run(),
   },
   {
-    label: 'Divider', description: 'Horizontal rule', icon: <Minus size={18} />,
+    label: 'Divider', description: 'Horizontal rule', icon: <Minus size={16} />,
     aliases: ['divider', 'hr', 'rule', 'line'],
     action: (e) => e.chain().focus().setHorizontalRule().run(),
   },
@@ -132,22 +132,25 @@ export function SlashCommandPalette({ editor }: SlashCommandPaletteProps) {
 
   // Scroll selected into view
   useEffect(() => {
-    const selected = ref.current?.querySelector('.slash-item.selected')
+    const selected = ref.current?.querySelector('.slash-item.is-highlighted')
     selected?.scrollIntoView({ block: 'nearest' })
   }, [selectedIndex])
 
   if (!state.active) return null
 
   return (
-    <div ref={ref} className="slash-palette" style={{ position: 'fixed', zIndex: 150 }}>
-      <div className="slash-header">Blocks</div>
+    <div ref={ref} className="menu slash-palette" role="listbox" aria-label="Insert block">
+      <span className="meta menu-label">Insert block</span>
       {items.length === 0 ? (
-        <div className="slash-empty">No results</div>
+        <div className="slash-empty">No blocks match “{state.query}”</div>
       ) : (
         items.map((item, i) => (
           <div
             key={item.label}
-            className={`slash-item ${i === selectedIndex ? 'selected' : ''} ${item.disabled ? 'disabled' : ''}`}
+            role="option"
+            aria-selected={i === selectedIndex}
+            className={`menu-item slash-item ${i === selectedIndex ? 'is-highlighted' : ''} ${item.disabled ? 'is-disabled' : ''}`}
+            onMouseDown={e => e.preventDefault()}
             onClick={() => selectItem(i)}
             onMouseEnter={() => setSelectedIndex(i)}
           >

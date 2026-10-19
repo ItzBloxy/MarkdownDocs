@@ -1,47 +1,70 @@
-/* Table block styling */
+/* Tables — the kit's spec table: mono caps header, hairline rows */
 .tiptap table {
-  border-collapse: collapse;
   width: 100%;
-  margin: 8px 0;
+  margin: 16px 0;
+  border-collapse: collapse;
   table-layout: auto;
 }
 
 .tiptap th,
 .tiptap td {
-  border: 1px solid #e0dce6;
-  padding: 8px 12px;
-  min-width: 80px;
   position: relative;
+  min-width: 80px;
+  padding: 10px 14px;
+  border: 1px solid var(--rule);
   vertical-align: top;
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
   font-size: 15px;
-  line-height: 1.6;
-  color: var(--text-page);
+  line-height: 1.55;
+  color: var(--pressed);
+  background: transparent;
 }
 
 .tiptap th {
-  background: transparent;
-  font-weight: 600;
+  padding-top: 12px;
+  padding-bottom: 10px;
+  border-bottom-color: var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
   text-align: left;
-}
-
-.tiptap td {
-  background: transparent;
+  color: var(--muted);
 }
 
 .tiptap tr:hover td {
-  background: #faf8fd;
+  background: #181818;
 }
 
 /* Selected cell */
 .tiptap .selectedCell {
-  outline: 2px solid var(--accent);
-  outline-offset: -1px;
-  background: rgba(160, 122, 255, 0.04);
+  outline: 2px solid var(--royal-300);
+  outline-offset: -2px;
 }
 
-.tiptap th.selectedCell {
-  background: rgba(160, 122, 255, 0.04);
+.tiptap .selectedCell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(185, 104, 243, 0.08);
+  pointer-events: none;
+}
+
+/* Column resize handle (Tiptap) */
+.tiptap .column-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: -1px;
+  right: -2px;
+  width: 3px;
+  background: var(--royal-300);
+  pointer-events: none;
+}
+
+.tiptap.resize-cursor {
+  cursor: col-resize;
 }
 
 /* Cell content */
@@ -57,109 +80,85 @@
   margin: 8px 0;
 }
 
-/* Add column button (right edge) */
-.table-add-col {
-  position: absolute;
-  right: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  z-index: 10;
-}
-
-.table-wrapper:hover .table-add-col {
-  opacity: 1;
-}
-
-.table-add-col:hover {
-  background: var(--accent-hover);
-}
-
-/* Add row button (bottom edge) */
+/* Add column / row buttons on the edges */
+.table-add-col,
 .table-add-row {
   position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--royal);
+  background: var(--royal);
+  color: var(--on-royal);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
   opacity: 0;
-  transition: opacity 0.15s ease;
-  z-index: 10;
+  transition: opacity var(--snap), background-color var(--snap), color var(--snap);
 }
 
+.table-add-col {
+  right: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.table-add-row {
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.table-wrapper:hover .table-add-col,
 .table-wrapper:hover .table-add-row {
   opacity: 1;
 }
 
+.table-add-col:hover,
 .table-add-row:hover {
-  background: var(--accent-hover);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--royal);
 }
 
 /* Table floating toolbar */
 .table-toolbar {
   position: absolute;
-  top: -36px;
+  top: -42px;
   left: 0;
-  display: flex;
-  gap: 2px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-primary);
-  border-radius: 6px;
-  padding: 3px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   z-index: 20;
+  display: flex;
+  background: var(--raised);
+  box-shadow: var(--shadow-float);
 }
 
 .table-toolbar button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border: none;
   background: none;
-  border-radius: 4px;
-  color: var(--text-secondary);
+  color: var(--muted);
   cursor: pointer;
-  transition: all 0.12s ease;
+  transition: background-color var(--snap), color var(--snap);
 }
 
 .table-toolbar button:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+  background: var(--ink);
+  color: var(--ground);
 }
 
 .table-toolbar button.danger:hover {
-  background: rgba(255, 107, 138, 0.15);
-  color: var(--danger);
+  background: var(--ink);
+  color: var(--royal);
 }
 
 .table-toolbar .sep {
   width: 1px;
-  background: var(--border-primary);
-  margin: 2px 4px;
+  background: var(--rule);
 }

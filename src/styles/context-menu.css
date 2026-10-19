@@ -1,198 +1,66 @@
-/* Context menu */
+/* Context menu + quick-correct — both build on the .menu primitive (index.css) */
+
 .context-menu {
   position: fixed;
-  min-width: 220px;
-  max-width: 280px;
-  background: #18112a;
-  border: 1px solid #2a2044;
-  border-radius: 10px;
-  padding: 6px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
   z-index: 10000;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  animation: ctxIn 0.12s ease-out;
+  min-width: 240px;
+  max-width: 300px;
 }
 
-@keyframes ctxIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* Quick-correct popup — fast auto-correct */
 .quick-correct {
   position: fixed;
-  min-width: 140px;
-  max-width: 220px;
-  background: #18112a;
-  border: 1px solid #2a2044;
-  border-radius: 8px;
-  padding: 4px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   z-index: 10001;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  animation: qcIn 0.06s ease-out;
+  min-width: 200px;
+  max-width: 260px;
 }
 
-@keyframes qcIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+.quick-correct .menu-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.qc-item {
+/* Chosen state inside menus (e.g. bold is on, current code language) */
+.menu-item.is-active .menu-item-icon {
+  color: var(--royal-300);
+}
+
+.menu-item.is-active:hover .menu-item-icon {
+  color: var(--royal);
+}
+
+.menu-item-chevron {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 6px 10px;
-  border-radius: 5px;
-  border: none;
-  background: transparent;
-  color: #e6dff2;
-  font-size: 13px;
-  font-family: var(--font-ui);
-  cursor: pointer;
-  transition: background 0.06s ease;
-  text-align: left;
+  margin-left: auto;
+  color: var(--muted);
 }
 
-.qc-item:hover {
-  background: #261c3e;
+.menu-item:hover .menu-item-chevron,
+.menu-item.is-highlighted .menu-item-chevron {
+  color: inherit;
 }
 
-.qc-suggestion {
-  font-weight: 600;
-  color: var(--accent-hover);
-}
-
-.qc-suggestion:hover {
-  background: rgba(160, 122, 255, 0.15);
-}
-
-.qc-empty {
-  color: #6e5f8a;
-  cursor: default;
-  font-style: italic;
-}
-
-.qc-action {
-  font-size: 12px;
-  color: #a99cc6;
-}
-
-.qc-action:hover {
-  color: #e6dff2;
-}
-
-.qc-divider {
-  height: 1px;
-  background: #2a2044;
-  margin: 3px 6px;
-}
-
-/* Menu item */
-.ctx-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 7px 12px;
-  border-radius: 6px;
-  border: none;
-  background: transparent;
-  color: #e6dff2;
-  font-size: 13px;
-  font-family: var(--font-ui);
-  cursor: pointer;
-  transition: background 0.08s ease;
-  text-align: left;
-  position: relative;
-}
-
-.ctx-item:hover {
-  background: #261c3e;
-}
-
-.ctx-item.disabled {
-  color: #6e5f8a;
-  cursor: default;
-}
-
-.ctx-item.disabled:hover {
-  background: transparent;
-}
-
-.ctx-item .ctx-icon {
-  width: 15px;
-  height: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.ctx-item .ctx-label {
-  flex: 1;
-}
-
-.ctx-item .ctx-shortcut {
-  font-size: 11px;
-  color: #6e5f8a;
-  font-family: var(--font-mono);
-  flex-shrink: 0;
-}
-
-.ctx-item .ctx-chevron {
-  color: #6e5f8a;
-  flex-shrink: 0;
-}
-
-.ctx-item.active .ctx-icon {
-  color: var(--accent);
-}
-
-/* Divider */
-.ctx-divider {
-  height: 1px;
-  background: #2a2044;
-  margin: 4px 8px;
-}
-
-/* Sub-menu */
+/* Sub-menu: butts against the parent's edge, aligned to its row */
 .ctx-submenu {
   position: absolute;
-  left: calc(100% + 4px);
   top: 0;
-  min-width: 200px;
-  background: #18112a;
-  border: 1px solid #2a2044;
-  border-radius: 10px;
-  padding: 6px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+  left: 100%;
   z-index: 10001;
-  animation: ctxIn 0.12s ease-out;
+  min-width: 212px;
+  max-height: 360px;
+  overflow-y: auto;
 }
 
 .ctx-submenu.flip-left {
   left: auto;
-  right: calc(100% + 4px);
+  right: 100%;
 }
 
-/* Language input in sub-menu */
+/* Language filter at the top of the code-language sub-menu */
 .ctx-lang-input {
+  display: block;
   width: calc(100% - 16px);
-  margin: 4px 8px 6px;
-  padding: 5px 8px;
-  background: var(--bg-input);
-  border: 1px solid #2a2044;
-  border-radius: 4px;
-  color: #e6dff2;
-  font-size: 12px;
-  font-family: var(--font-ui);
-  outline: none;
-}
-
-.ctx-lang-input:focus {
-  border-color: var(--accent);
+  height: 32px;
+  margin: 8px;
+  font-size: 13px;
 }

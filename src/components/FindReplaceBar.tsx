@@ -38,6 +38,11 @@ export function FindReplaceBar({ editor, onClose }: FindReplaceBarProps) {
     editor?.commands.setSearchQuery(findValue)
   }, [findValue, editor])
 
+  // However the bar closes (its own Escape, the global one, Ctrl+F), drop the highlights
+  useEffect(() => {
+    return () => { editor?.commands.setSearchQuery('') }
+  }, [editor])
+
   // Clear search on close
   const handleClose = () => {
     editor?.commands.setSearchQuery('')
@@ -56,64 +61,93 @@ export function FindReplaceBar({ editor, onClose }: FindReplaceBarProps) {
     }
   }
 
+  const hasResults = searchState.matchCount > 0
+
   return (
-    <div className="find-replace-bar">
+    <div className="find-replace-bar" role="search">
       <div className="find-row">
+        <span className="meta find-label">Find</span>
         <input
           ref={findRef}
           type="text"
-          placeholder="Find..."
+          placeholder="Search this document"
+          aria-label="Find"
           value={findValue}
           onChange={e => setFindValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="find-input"
+          className="field find-input"
         />
-        <span className="find-count">
-          {searchState.matchCount > 0
-            ? `${searchState.currentIndex + 1} of ${searchState.matchCount}`
-            : findValue ? 'No results' : ''}
+        <span className={`find-count ${hasResults ? 'has-results' : ''}`} aria-live="polite">
+          {hasResults
+            ? `${String(searchState.currentIndex + 1).padStart(2, '0')} / ${String(searchState.matchCount).padStart(2, '0')}`
+            : findValue ? 'No matches' : ''}
         </span>
-        <button className="find-nav-btn" onClick={() => editor?.commands.prevSearchMatch()} title="Previous (Shift+Enter)" disabled={searchState.matchCount === 0}>
-          <ChevronUp size={14} />
-        </button>
-        <button className="find-nav-btn" onClick={() => editor?.commands.nextSearchMatch()} title="Next (Enter)" disabled={searchState.matchCount === 0}>
-          <ChevronDown size={14} />
+        <button
+          type="button"
+          className="icon-btn has-tip"
+          onClick={() => editor?.commands.prevSearchMatch()}
+          aria-label="Previous match"
+          data-tip="Previous  Shift+Enter"
+          disabled={!hasResults}
+        >
+          <ChevronUp size={16} />
         </button>
         <button
-          className={`find-nav-btn ${showReplace ? 'active' : ''}`}
-          onClick={() => setShowReplace(!showReplace)}
-          title="Toggle Replace"
-          style={{ fontSize: 11, width: 'auto', padding: '0 6px' }}
+          type="button"
+          className="icon-btn has-tip"
+          onClick={() => editor?.commands.nextSearchMatch()}
+          aria-label="Next match"
+          data-tip="Next  Enter"
+          disabled={!hasResults}
         >
-          Replace
+          <ChevronDown size={16} />
         </button>
-        <button className="find-nav-btn" onClick={handleClose} title="Close (Escape)">
-          <X size={14} />
+        <button
+          type="button"
+          className={`btn ${showReplace ? 'btn-secondary' : 'btn-ghost'}`}
+          onClick={() => setShowReplace(!showReplace)}
+          aria-expanded={showReplace}
+        >
+          <span className={showReplace ? undefined : 'btn-label'}>Replace</span>
+        </button>
+        <div className="find-spacer" />
+        <button
+          type="button"
+          className="icon-btn icon-btn-bare has-tip tip-end"
+          onClick={handleClose}
+          aria-label="Close find"
+          data-tip="Close  Esc"
+        >
+          <X size={16} />
         </button>
       </div>
       {showReplace && (
         <div className="replace-row">
+          <span className="meta find-label">Replace</span>
           <input
             type="text"
-            placeholder="Replace with..."
+            placeholder="Replace with"
+            aria-label="Replace with"
             value={replaceValue}
             onChange={e => setReplaceValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="find-input"
+            className="field find-input"
           />
           <button
-            className="replace-btn"
+            type="button"
+            className="btn btn-secondary"
             onClick={() => editor?.commands.replaceSearchMatch(replaceValue)}
-            disabled={searchState.matchCount === 0}
+            disabled={!hasResults}
           >
             Replace
           </button>
           <button
-            className="replace-btn"
+            type="button"
+            className="btn btn-secondary"
             onClick={() => editor?.commands.replaceAllSearchMatches(replaceValue)}
-            disabled={searchState.matchCount === 0}
+            disabled={!hasResults}
           >
-            Replace All
+            Replace all
           </button>
         </div>
       )}

@@ -1,0 +1,525 @@
+/* ==========================================================================
+   App chrome — title bar, toolbar, status bar, canvas, page, banners
+   ========================================================================== */
+
+/* ---------- Title bar ---------- */
+
+.title-bar {
+  display: flex;
+  align-items: stretch;
+  height: 52px;
+  padding: 0 20px;
+  background: var(--ground);
+  border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+
+.doc-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding-right: 20px;
+  margin-right: 8px;
+  border-right: 1px solid var(--rule);
+}
+
+.doc-name {
+  max-width: 320px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: text;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color var(--snap);
+}
+
+.doc-name:hover {
+  text-decoration-color: var(--faint);
+}
+
+.doc-name-input {
+  width: 240px;
+  height: 32px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.fav-btn {
+  width: 32px;
+  height: 32px;
+  color: var(--muted);
+}
+
+.fav-btn.is-on {
+  color: var(--royal-300);
+}
+
+.fav-btn.is-on:hover {
+  color: var(--royal);
+}
+
+/* Menu bar — nav links: muted at rest, ink on hover, a Royal 300 bar when open */
+.menubar {
+  display: flex;
+  align-items: stretch;
+}
+
+.menubar-slot {
+  position: relative;
+  display: flex;
+}
+
+.menubar-trigger {
+  display: flex;
+  align-items: center;
+  padding: 3px 12px 0;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--snap), border-color var(--snap);
+}
+
+.menubar-trigger:hover {
+  color: var(--ink);
+}
+
+.menubar-trigger:focus-visible {
+  outline-offset: -6px;
+}
+
+.menubar-trigger.is-open {
+  color: var(--ink);
+  border-bottom-color: var(--royal-300);
+}
+
+.menubar-trigger:disabled {
+  color: var(--faint);
+  cursor: default;
+}
+
+.menubar-slot > .menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+}
+
+.title-bar-actions {
+  display: flex;
+  align-items: stretch;
+  margin-left: auto;
+  margin-right: -12px;
+}
+
+/* ---------- Toolbar ---------- */
+
+.toolbar-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 52px;
+  padding: 0 20px 0 18px;
+  background: var(--ground);
+  border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+
+.tb-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color var(--snap), color var(--snap), box-shadow var(--snap);
+}
+
+.tb-btn:hover {
+  background: var(--ink);
+  color: var(--ground);
+}
+
+.tb-btn:active {
+  background: var(--pressed);
+  color: var(--ground);
+  box-shadow: inset 0 0 0 2px var(--royal);
+}
+
+/* On — ink glyph over a Royal 300 bar, like a selected tab */
+.tb-btn.is-active {
+  color: var(--ink);
+  box-shadow: inset 0 -3px 0 var(--royal-300);
+}
+
+.tb-btn.is-active:hover {
+  color: var(--ground);
+  box-shadow: inset 0 -3px 0 var(--royal);
+}
+
+.tb-btn:disabled,
+.tb-btn:disabled:hover {
+  background: transparent;
+  color: #4A4A4A;
+  box-shadow: none;
+  cursor: default;
+}
+
+.tb-sep {
+  width: 1px;
+  height: 20px;
+  margin: 0 10px;
+  background: var(--rule);
+  flex-shrink: 0;
+}
+
+/* Text-style picker */
+.style-picker {
+  position: relative;
+}
+
+.style-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 156px;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  border: 2px solid var(--rule-strong);
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--snap), border-color var(--snap), color var(--snap);
+}
+
+.style-select svg {
+  color: var(--muted);
+  transition: transform var(--snap);
+}
+
+.style-select:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--ground);
+}
+
+.style-select:hover svg {
+  color: inherit;
+}
+
+.style-select:active {
+  background: var(--pressed);
+  border-color: var(--royal);
+  color: var(--ground);
+}
+
+.style-select.is-open {
+  border-color: var(--ink);
+}
+
+.style-select.is-open svg {
+  transform: rotate(180deg);
+}
+
+.style-picker > .menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 200px;
+  z-index: 100;
+}
+
+/* Options preview their own weight */
+.style-option-h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; }
+.style-option-h2 { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; }
+.style-option-h3 { font-size: 14px; font-weight: 700; }
+
+/* ---------- Tooltip (kit 04.2) — inverted, mono, square pointer ---------- */
+
+.has-tip {
+  position: relative;
+}
+
+.has-tip::before,
+.has-tip::after {
+  position: absolute;
+  left: 50%;
+  z-index: 300;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0ms linear, visibility 0ms linear;
+}
+
+.has-tip::after {
+  content: attr(data-tip);
+  top: calc(100% + 10px);
+  transform: translateX(-50%);
+  padding: 8px 10px;
+  background: var(--ink);
+  color: var(--ground);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: pre;
+}
+
+.has-tip::before {
+  content: '';
+  top: calc(100% + 5px);
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  background: var(--ink);
+  transform: rotate(45deg);
+}
+
+.has-tip.tip-top::after {
+  top: auto;
+  bottom: calc(100% + 10px);
+}
+
+.has-tip.tip-top::before {
+  top: auto;
+  bottom: calc(100% + 5px);
+}
+
+/* Anchor tooltips near the right edge to the button's right side */
+.has-tip.tip-end::after {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.has-tip:hover::before,
+.has-tip:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 450ms;
+}
+
+.has-tip:active::before,
+.has-tip:active::after {
+  opacity: 0;
+  visibility: hidden;
+  transition-delay: 0ms;
+}
+
+/* ---------- Status bar ---------- */
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 32px;
+  padding: 0 12px 0 20px;
+  background: var(--ground);
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.status-stat b {
+  margin-left: 6px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.status-spacer {
+  flex: 1;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-item.is-live {
+  color: var(--ink);
+}
+
+.status-square {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border: 1px solid var(--muted);
+}
+
+.status-square.is-on {
+  background: var(--royal-300);
+  border-color: var(--royal-300);
+}
+
+.status-btn {
+  width: 28px;
+  height: 24px;
+  color: var(--muted);
+}
+
+/* ---------- Canvas + page ---------- */
+
+/* The ground is ruled every 32px — the kit's raster */
+.editor-canvas {
+  flex: 1;
+  overflow: auto;
+  padding: 48px 24px 96px;
+  background-color: var(--ground);
+  background-image: linear-gradient(to bottom, transparent 31px, #151515 31px);
+  background-size: 100% 32px;
+  background-attachment: local;
+}
+
+.editor-page {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 240px);
+  margin: 0 auto;
+  padding: 72px 80px 96px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Resize handles: invisible until hovered, then a Royal 300 line on the edge */
+.page-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 9px;
+  cursor: ew-resize;
+  touch-action: none;
+  z-index: 1;
+}
+
+.page-resize-handle.is-left { left: -5px; }
+.page-resize-handle.is-right { right: -5px; }
+
+.page-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 3px;
+  background: transparent;
+  transition: background-color var(--snap);
+}
+
+.page-resize-handle:hover::after,
+.page-resize-handle:active::after {
+  background: var(--royal-300);
+}
+
+/* ---------- Conflict banner (kit warning: hatched block, ink frame) ---------- */
+
+.conflict-bar {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 20px;
+  width: 100%;
+  max-width: 816px;
+  margin: 0 auto 24px;
+  padding-right: 12px;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+}
+
+.conflict-hatch {
+  align-self: stretch;
+  min-height: 64px;
+  border-right: 2px solid var(--ink);
+  background: repeating-linear-gradient(-45deg, var(--ink) 0 3px, var(--surface) 3px 9px);
+}
+
+.conflict-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 0;
+}
+
+.conflict-message {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.conflict-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- Desktop gate ---------- */
+
+.desktop-gate {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 20px;
+  height: 100%;
+  padding: 32px;
+  background: var(--ground);
+  color: var(--ink);
+}
+
+.desktop-gate h1 {
+  font-size: clamp(36px, 10.5vw, 112px);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.06em;
+}
+
+.desktop-gate p {
+  max-width: 34ch;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------- Shell ---------- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

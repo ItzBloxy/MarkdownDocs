@@ -11,16 +11,8 @@ interface Props {
 export function PageResizeHandle({ side, onDragStart, onReset }: Props) {
   return (
     <div
-      style={{
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        width: 8,
-        [side]: -4,
-        cursor: 'ew-resize',
-        touchAction: 'none',
-        zIndex: 1,
-      }}
+      className={`page-resize-handle is-${side}`}
+      title="Drag to resize the page. Double-click to reset."
       onPointerDown={(e) => onDragStart(e, side)}
       onDoubleClick={onReset}
     />

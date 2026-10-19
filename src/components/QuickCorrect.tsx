@@ -61,28 +61,30 @@ export function QuickCorrect({
   }, [onClose])
 
   return createPortal(
-    <div ref={ref} className="quick-correct" style={{ left: x, top: y }}>
+    <div ref={ref} className="menu quick-correct" role="menu" style={{ left: x, top: y }}>
+      <span className="meta menu-label">Spelling — {word}</span>
       {suggestions.length > 0 ? (
         suggestions.map(s => (
           <button
             key={s}
-            className="qc-item qc-suggestion"
+            type="button"
+            className="menu-item suggestion"
             onClick={() => onSelect(s)}
           >
-            {s}
+            <span className="menu-item-label">{s}</span>
           </button>
         ))
       ) : (
-        <div className="qc-item qc-empty">No suggestions</div>
+        <div className="menu-item is-disabled">No suggestions</div>
       )}
-      <div className="qc-divider" />
-      <button className="qc-item qc-action" onClick={() => { onAddToDictionary(); onClose() }}>
-        <BookPlus size={13} />
-        Add to Dictionary
+      <div className="menu-sep" role="separator" />
+      <button type="button" className="menu-item" onClick={() => { onAddToDictionary(); onClose() }}>
+        <span className="menu-item-icon"><BookPlus size={15} /></span>
+        <span className="menu-item-label">Add to dictionary</span>
       </button>
-      <button className="qc-item qc-action" onClick={() => { onIgnore(); onClose() }}>
-        <EyeOff size={13} />
-        Ignore
+      <button type="button" className="menu-item" onClick={() => { onIgnore(); onClose() }}>
+        <span className="menu-item-icon"><EyeOff size={15} /></span>
+        <span className="menu-item-label">Ignore all</span>
       </button>
     </div>,
     document.body,
